@@ -1,0 +1,7 @@
+.quill-form-item {
+    min-height: 200px; /* 设置最小高度为 200px */
+}
+
+.quill-input {
+    height: 100%; /* 设置高度为父容器高度的 100% */
+}

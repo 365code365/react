@@ -1,7 +1,6 @@
 import React, {CSSProperties, useState} from 'react';
 import {Menu} from 'antd';
 import {CardBox} from '../component/CardBox';
-import {CardBox1} from '../component/CardBox1';
 import {UserOutlined} from '@ant-design/icons';
 
 const initialCustomStyle: CSSProperties = {
@@ -15,8 +14,8 @@ const initialCustomStyle: CSSProperties = {
 
 const menuItems = [
     {key: 'Sxxx1', item: CardBox, menuName: 'Sxxx1'},
-    {key: 'Sxxx2', item: CardBox1, menuName: 'Sxxx2'},
-    {key: 'Sxxx3', item: CardBox1, menuName: 'Sxxx3'}
+    {key: 'Sxxx2', item: CardBox, menuName: 'Sxxx2'},
+    {key: 'Sxxx3', item: CardBox, menuName: 'Sxxx3'}
 ];
 
 const HomePage = () => {

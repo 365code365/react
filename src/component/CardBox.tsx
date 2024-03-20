@@ -1,84 +1,128 @@
-import {Button, Card, Popover, Steps} from "antd";
+import {Button, Card, Modal, Popover, Steps} from "antd";
 import {CheckCircleOutlined, LoadingOutlined} from "@ant-design/icons";
-import React from "react";
+import React, {useState} from "react";
+import ReactQuill from "react-quill";
+import HTMLPreview from "./HTMLPreview";
+import CreatCert from "./CreateCertForm";
+import CreateCertForm from "./CreateCertForm";
 
 
 const {Step} = Steps;
 export const CardBox = (props: any) => {
+
+
+    const desc = "<!DOCTYPE html>\n" +
+        "<html lang=\"en\">\n" +
+        "<head>\n" +
+        "    <meta charset=\"UTF-8\">\n" +
+        "    <title>Title</title>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        " <div>sss</div>\n" +
+        "<strong>assaas</strong>\n" +
+        "</body>\n" +
+        "</html>";
+
+
+    const [cardInfoList, setCardInfoList] = useState([
+        {
+            id: 1,
+            title: 'Card 1',
+            desc: desc,
+            image: 'https://th.bing.com/th/id/OIP.QC-Su_ie-QzKBtY74XNNIgHaJ-?rs=1&pid=ImgDetMain',
+            currentStep: 0,
+            currentStepDesc: "waiting apply"
+        },
+        {
+            id: 2,
+            title: 'Card 1',
+            desc: desc,
+            image: 'https://th.bing.com/th/id/OIP.QC-Su_ie-QzKBtY74XNNIgHaJ-?rs=1&pid=ImgDetMain',
+            currentStep: 1,
+            currentStepDesc: "applying"
+        },
+
+        {
+            id: 3,
+            title: 'Card 1',
+            desc: desc,
+            image: 'https://th.bing.com/th/id/OIP.QC-Su_ie-QzKBtY74XNNIgHaJ-?rs=1&pid=ImgDetMain',
+            currentStep: 0,
+            currentStepDesc: "waiting apply"
+        },
+
+        {
+            id: 4,
+            title: 'Card 1',
+            desc: desc,
+            image: 'https://th.bing.com/th/id/OIP.QC-Su_ie-QzKBtY74XNNIgHaJ-?rs=1&pid=ImgDetMain',
+            currentStep: 2,
+            currentStepDesc: "waiting apply"
+        },
+
+    ]);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+    const [isAdmin, setIsAdmin] = useState(true)
+
+    const [isTeacher, setIsTeacher] = useState(true)
+
+    const [isStudent, setIsStudent] = useState(true)
+
+
     console.log('props', props)
-    return (<div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px'
-    }}>
-        <Card
-            style={{maxWidth: 400, margin: '10px'}}
-            cover={<img alt="Applying" src="/path/to/applying-image.jpg" style={{height: 200}}/>}
-        >
-            <Card.Meta title={<strong>Applying</strong>}/>
-            <Steps current={0} style={{marginTop: 20}}>
-                <Step title="Step 1" icon={<LoadingOutlined/>}/>
-                <Step title="Step 2" icon={<LoadingOutlined/>}/>
-                <Step title="Step 3" icon={<LoadingOutlined/>}/>
-            </Steps>
-            <div style={{marginBottom: '10px'}}>
-                <Popover content={"content"} title="Title">
-                    <Button type="primary">apply</Button>
-                </Popover>
-            </div>
-            <div>
-                <Popover content={<p>display reject reason</p>} trigger="click">
-                    <Button type={"primary"}>display reject reason</Button>
-                </Popover>
-            </div>
-        </Card>
-        <Card
-            style={{maxWidth: 400, margin: '10px'}}
-            cover={<img alt="Under Review" src="/path/to/under-review-image.jpg" style={{height: 200}}/>}
-        >
-            <Card.Meta title={<strong>Under Review</strong>}/>
-            <Steps current={1} style={{marginTop: 20}}>
-                <Step title="Step 1" icon={<CheckCircleOutlined/>}/>
-                <Step title="Step 2" icon={<LoadingOutlined/>}/>
-                <Step title="Step 3" icon={<LoadingOutlined/>}/>
-            </Steps>
-        </Card>
-        <Card
-            style={{maxWidth: 400, margin: '10px'}}
-            cover={<img alt="Approval Pending" src="/path/to/approval-pending-image.jpg"
-                        style={{height: 200}}/>}
-        >
-            <Card.Meta title={<strong>Approval Pending</strong>}/>
-            <Steps current={2} style={{marginTop: 20}}>
-                <Step title="Step 1" icon={<CheckCircleOutlined/>}/>
-                <Step title="Step 2" icon={<CheckCircleOutlined/>}/>
-                <Step title="Step 3" icon={<LoadingOutlined/>}/>
-            </Steps>
-        </Card>
-        <Card
-            style={{maxWidth: 400,margin: '10px'}}
-            cover={<img alt="Approved" src="/path/to/approved-image.jpg" style={{height: 200}}/>}
-        >
-            <Card.Meta title={<strong>Approved</strong>}/>
-            <Steps current={3} style={{marginTop: 20}}>
-                <Step title="Step 1" icon={<CheckCircleOutlined/>}/>
-                <Step title="Step 2" icon={<CheckCircleOutlined/>}/>
-                <Step title="Step 3" icon={<CheckCircleOutlined/>}/>
-            </Steps>
-        </Card>
-        <Card
-            style={{maxWidth: 400, margin: '10px'}}
-            cover={<img alt="Approved" src="/path/to/approved-image.jpg" style={{height: 200}}/>}
-        >
-            <Card.Meta title={<strong>Approved</strong>}/>
-            <Steps current={3} style={{marginTop: 20}}>
-                <Step title="Step 1" icon={<CheckCircleOutlined/>}/>
-                <Step title="Step 2" icon={<CheckCircleOutlined/>}/>
-                <Step title="Step 3" icon={<CheckCircleOutlined/>}/>
-            </Steps>
-        </Card>
+    return (<div>
+        <div>
+            <Button onClick={() => {
+                setIsModalOpen(true)
+            }} style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> 创建一个证书</Button>
+            <Button style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> 审批证书</Button>
+
+        </div>
+        <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '20px'
+        }}>
+
+            {cardInfoList.map((item) => (
+                <Card
+                    style={{maxWidth: 300, margin: '10px', border: '0.5px solid red'}}
+                    cover={<img alt="Applying" src={item.image} style={{height: 300}}/>}
+                >
+                    <Card.Meta title={<strong>{item.currentStepDesc}</strong>}/>
+                    <Steps current={item.currentStep} style={{marginTop: 20}}>
+                        <Step title="waiting apply" icon={<LoadingOutlined/>}/>
+                        <Step title="applying" icon={<LoadingOutlined/>}/>
+                        <Step title="apply success/faild" icon={<LoadingOutlined/>}/>
+                    </Steps>
+                    <div style={{marginBottom: '10px'}}>
+                        <Popover content={<div style={{width: '300px', textWrap: 'wrap'}}>{item.desc}</div>}>
+                            <Button type="primary">apply</Button>
+                        </Popover>
+                    </div>
+                    <div style={{marginBottom: '10px'}}>
+                        <Popover placement="top" trigger="click"
+                                 content={<div
+                                     style={{width: '300px', maxHeight: '300px', textWrap: 'wrap', overflowY: 'auto'}}>
+                                     <HTMLPreview htmlContent={item.desc}/></div>}>
+                            <a>certificate desc</a>
+                        </Popover>
+                    </div>
+                    <div>
+                        <Popover content={<p>display reject reason</p>} trigger="click">
+                            <Button type={"primary"}>display reject reason</Button>
+                        </Popover>
+                    </div>
+                </Card>
+
+            ))}
+            <CreateCertForm  onCancel={()=>{}} onCreate={()=>{}} key={'11'} visible={true}/>
+        </div>
 
     </div>)
 }
