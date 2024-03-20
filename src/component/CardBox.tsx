@@ -78,33 +78,34 @@ export const CardBox = (props: any) => {
             <Button onClick={() => {
                 setIsModalOpen(true)
             }} style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> 创建一个证书</Button>
-            <Button style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> 审批证书</Button>
-
         </div>
         <div style={{
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: '20px'
+            padding: '10px'
         }}>
 
             {cardInfoList.map((item) => (
                 <Card
-                    style={{maxWidth: 300, margin: '10px', border: '0.5px solid red'}}
+                    style={{maxWidth: 400, margin: '10px', border: '0.5px solid red'}}
                     cover={<img alt="Applying" src={item.image} style={{height: 300}}/>}
                 >
                     <Card.Meta title={<strong>{item.currentStepDesc}</strong>}/>
-                    <Steps current={item.currentStep} style={{marginTop: 20}}>
-                        <Step title="waiting apply" icon={<LoadingOutlined/>}/>
-                        <Step title="applying" icon={<LoadingOutlined/>}/>
-                        <Step title="apply success/faild" icon={<LoadingOutlined/>}/>
-                    </Steps>
-                    <div style={{marginBottom: '10px'}}>
-                        <Popover content={<div style={{width: '300px', textWrap: 'wrap'}}>{item.desc}</div>}>
-                            <Button type="primary">apply</Button>
-                        </Popover>
-                    </div>
+                    <Steps size="small" status="error" current={item.currentStep} style={{marginTop: 20}}
+                           items={[
+                               {
+                                   title: 'Finished',
+                               },
+                               {
+                                   title: 'In Progress',
+                               },
+                               {
+                                   title: 'Waiting',
+                               },
+                           ]}
+                    />
                     <div style={{marginBottom: '10px'}}>
                         <Popover placement="top" trigger="click"
                                  content={<div
@@ -115,13 +116,19 @@ export const CardBox = (props: any) => {
                     </div>
                     <div>
                         <Popover content={<p>display reject reason</p>} trigger="click">
-                            <Button type={"primary"}>display reject reason</Button>
+                            <a style={{color: '#095672'}} type={"primary"}>show result</a>
                         </Popover>
                     </div>
+                    <Button type="primary">apply</Button>
+                    <Button style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> 审批证书</Button>
                 </Card>
 
             ))}
-            <CreateCertForm  onCancel={()=>{}} onCreate={()=>{}} key={'11'} visible={true}/>
+            <CreateCertForm onCancel={() => {
+                setIsModalOpen(false)
+            }} onCreate={(values) => {
+                console.log('values', values)
+            }} key={'11'} visible={isModalOpen}/>
         </div>
 
     </div>)
