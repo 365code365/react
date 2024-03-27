@@ -8,13 +8,13 @@ const CreateCertForm: React.FC = () => {
     const [editorHtml, setEditorHtml] = useState("");
 
     const handleOk = () => {
-        // 处理确认按钮点击
+        // confirm btn
         setIsModalVisible(false);
-        // 编辑器内容可通过editorHtml进行处理
+
     };
 
     const handleCancel = () => {
-        // 处理取消按钮点击
+        //  cancel btn
         setIsModalVisible(false);
     };
 

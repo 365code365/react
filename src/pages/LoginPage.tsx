@@ -8,7 +8,7 @@ const LoginPage = () => {
 
     const onFinish = (values: any) => {
         setLoading(true);
-        // 在这里可以处理登录逻辑，如发起登录请求等
+        // login
         console.log('Received values:', values);
         setLoading(false);
     };

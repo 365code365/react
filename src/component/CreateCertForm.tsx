@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Form, Input, Select, Button, Upload, message } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import "../css/CreateCertForm.css"; // 导入样式文件
+import "../css/CreateCertForm.css"; // import  css
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
 
 type CreateCertFormProps = {
@@ -17,18 +17,18 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                                                            onCreate,
                                                        }) => {
     const [form] = Form.useForm();
-    const [imageUrl, setImageUrl] = useState<string | null>(null); // 用于存储上传图片的预览 URL
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-    // 上传图片之后的回调函数
+    // upload image success result
     const onUploadChange = (info: any) => {
         if (info.file.status === 'done') {
-            // 获取上传成功的图片链接
+            // get image url
             const imageUrl = info.file.response.url;
             setImageUrl(imageUrl);
         }
     };
 
-    // 上传图片之前的校验函数
+    // check function
     const beforeUpload = (file: File) => {
         const isImage = file.type.startsWith('image/');
         if (!isImage) {
