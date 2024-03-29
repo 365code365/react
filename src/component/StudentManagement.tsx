@@ -5,7 +5,7 @@ import * as XLSX from 'xlsx';
 import {UploadOutlined} from "@ant-design/icons";
 
 interface Student {
-    UserlD: number;
+    UserID: number;
     FullName: string;
     Role: number;
     Grade: string;
@@ -20,7 +20,7 @@ const StudentManagement: React.FC = () => {
 
     // Table columns configuration
     const columns = [
-        { title: 'UserlD', dataIndex: 'UserlD', key: 'UserlD' },
+        { title: 'UserID', dataIndex: 'UserID', key: 'UserID' },
         { title: 'FullName', dataIndex: 'FullName', key: 'FullName' },
         { title: 'Role', dataIndex: 'Role', key: 'Role' },
         { title: 'Grade', dataIndex: 'grade', key: 'grade' },
@@ -69,7 +69,7 @@ const StudentManagement: React.FC = () => {
                     const headers: string[] = excelData[0];
                     const parsedStudents = excelData.slice(1).map((row: any, index: number) => ({
                         id: index + 1,
-                        UserlD: row[headers.indexOf('UserlD')],
+                        UserID: row[headers.indexOf('UserID')],
                         FullName: row[headers.indexOf('FullName')],
                         Role: row[headers.indexOf('Role')],
                         Grade: row[headers.indexOf('Grade')],
