@@ -2,6 +2,8 @@ import React, {CSSProperties, useState} from 'react';
 import {Menu} from 'antd';
 import {CardBox} from '../component/CardBox';
 import {UserOutlined} from '@ant-design/icons';
+import {DocumentManage} from "../component/DocumentManage";
+import StudentManagement from "../component/StudentManagement";
 
 const initialCustomStyle: CSSProperties = {
     color: 'blue',
@@ -13,9 +15,9 @@ const initialCustomStyle: CSSProperties = {
 };
 
 const menuItems = [
-    {key: 'Sxxx1', item: CardBox, menuName: 'Sxxx1'},
-    {key: 'Sxxx2', item: CardBox, menuName: 'Sxxx2'},
-    {key: 'Sxxx3', item: CardBox, menuName: 'Sxxx3'}
+    {key: 'Home', item: CardBox, menuName: 'Home'},
+    {key: 'StudentManage', item: StudentManagement, menuName: 'StudentManage'},
+    {key: 'DocumentManage', item: DocumentManage, menuName: 'DocumentManage'}
 ];
 
 const HomePage = () => {
