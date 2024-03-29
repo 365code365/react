@@ -5,32 +5,28 @@ import * as XLSX from 'xlsx';
 import {UploadOutlined} from "@ant-design/icons";
 
 interface Student {
-    id: number;
-    name: string;
-    age: number;
-    grade: string;
-    email: string;
-    password: string;
-    gender: number; // 0: Female, 1: Male, 2: Unknown
+    UserlD: number;
+    FullName: string;
+    Role: number;
+    Grade: string;
+    Email: string;
+    PasswordHash: string;
+    Gender: number; // 0: Female, 1: Male, 2: Unknown
 }
 
 const StudentManagement: React.FC = () => {
     // Assume initial student data
-    const [students, setStudents] = useState<Student[]>([
-        { id: 1, name: 'John Doe', age: 20, grade: 'A', email: 'john@example.com', password: 'password1', gender: 1 },
-        { id: 2, name: 'Jane Smith', age: 21, grade: 'B', email: 'jane@example.com', password: 'password2', gender: 0 },
-        // Other student data...
-    ]);
+    const [students, setStudents] = useState<Student[]>([]);
 
     // Table columns configuration
     const columns = [
-        { title: 'ID', dataIndex: 'id', key: 'id' },
-        { title: 'Name', dataIndex: 'name', key: 'name' },
-        { title: 'Age', dataIndex: 'age', key: 'age' },
+        { title: 'UserlD', dataIndex: 'UserlD', key: 'UserlD' },
+        { title: 'FullName', dataIndex: 'FullName', key: 'FullName' },
+        { title: 'Role', dataIndex: 'Role', key: 'Role' },
         { title: 'Grade', dataIndex: 'grade', key: 'grade' },
         { title: 'Email', dataIndex: 'email', key: 'email' },
-        { title: 'Password', dataIndex: 'password', key: 'password' },
-        { title: 'Gender', dataIndex: 'gender', key: 'gender', render: (gender: number) => (gender === 0 ? 'Female' : (gender === 1 ? 'Male' : 'Unknown')) },
+        { title: 'PasswordHash', dataIndex: 'PasswordHash', key: 'PasswordHash' },
+        { title: 'Gender', dataIndex: 'Gender', key: 'Gender', render: (gender: number) => (gender === 0 ? 'Female' : (gender === 1 ? 'Male' : 'Unknown')) },
         // Other columns...
     ];
 
@@ -73,12 +69,13 @@ const StudentManagement: React.FC = () => {
                     const headers: string[] = excelData[0];
                     const parsedStudents = excelData.slice(1).map((row: any, index: number) => ({
                         id: index + 1,
-                        name: row[headers.indexOf('Name')],
-                        age: row[headers.indexOf('Age')],
-                        grade: row[headers.indexOf('Grade')],
-                        email: row[headers.indexOf('Email')],
-                        password: row[headers.indexOf('Password')],
-                        gender: parseInt(row[headers.indexOf('Gender')]), // Parse string value to integer
+                        UserlD: row[headers.indexOf('UserlD')],
+                        FullName: row[headers.indexOf('FullName')],
+                        Role: row[headers.indexOf('Role')],
+                        Grade: row[headers.indexOf('Grade')],
+                        Email: row[headers.indexOf('Email')],
+                        PasswordHash: row[headers.indexOf('PasswordHash')],
+                        Gender: parseInt(row[headers.indexOf('Gender')]), // Parse string value to integer
                     }));
                     setStudents([...students, ...parsedStudents]);
                 }
