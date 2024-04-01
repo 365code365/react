@@ -27,7 +27,7 @@ const StudentManagement: React.FC = () => {
         { title: 'Grade', dataIndex: 'Grade', key: 'Grade' },
         { title: 'Email', dataIndex: 'Email', key: 'Email' },
         { title: 'PasswordHash', dataIndex: 'PasswordHash', key: 'PasswordHash' },
-        { title: 'Gender', dataIndex: 'Gender', key: 'Gender', render: (gender: string) => (gender === '0' ? 'Female' : (gender === '1' ? 'Male' : 'Unknown')) },
+        { title: 'Gender', dataIndex: 'Gender', key: 'Gender', render: (gender: string) => (gender === 'A' ? 'Female' : (gender === 'B' ? 'Male' : 'Unknown')) },
         // Other columns...
     ];
 
