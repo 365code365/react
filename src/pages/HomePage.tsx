@@ -6,6 +6,7 @@ import {DocumentManage} from "../component/DocumentManage";
 import StudentManagement from "../component/StudentManagement";
 import {getMenuList} from "../api/menu";
 import { JSX } from 'react/jsx-runtime';
+import {MenuManage} from "../component/MenuManage";
 
 const initialCustomStyle: CSSProperties = {
     color: 'blue',
@@ -20,7 +21,8 @@ const initialCustomStyle: CSSProperties = {
 const menuItems = [
     {key: 'Home', item: CardBox, menuName: 'Home',show:false},
     {key: 'StudentManage', item: StudentManagement, menuName: 'StudentManage',show:false},
-    {key: 'DocumentManage', item: DocumentManage, menuName: 'DocumentManage',show:false}
+    {key: 'DocumentManage', item: DocumentManage, menuName: 'DocumentManage',show:false},
+    {key: 'MenuManage', item: MenuManage, menuName: 'MenuManage',show:false}
 ];
 
 const HomePage = () => {
