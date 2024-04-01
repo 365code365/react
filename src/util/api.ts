@@ -1,10 +1,10 @@
 import axios, {AxiosResponse, AxiosError} from 'axios';
 
-const baseURL = import.meta.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:7001';
 
 // Create an Axios instance
 const instance = axios.create({
-    baseURL: baseURL, // Modify baseURL according to your actual situation
+    baseURL: "/api", // Modify baseURL according to your actual situation
+    timeout: 5000 // setting timeout
 });
 
 // GET request wrapper
