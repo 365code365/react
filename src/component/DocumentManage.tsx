@@ -32,61 +32,67 @@ const DocumentManage: React.FC = () => {
 
     return (
         <div className="document-manage-container"> {/* Apply custom CSS class for styling */}
-            <Form form={form} layout="vertical" onFinish={handleSubmit} className="document-form">
-                <Form.Item label="ID" name="ID">
-                    <Input placeholder="Enter ID"/>
-                </Form.Item>
+            <div>
+                <Form form={form} layout="vertical" onFinish={handleSubmit} className="document-form">
+                    <Form.Item label="ID" name="ID">
+                        <Input placeholder="Enter ID"/>
+                    </Form.Item>
 
-                <Form.Item label="Claim Type" name="ClaimType">
-                    <Input placeholder="Enter claim type"/>
-                </Form.Item>
+                    <Form.Item label="Claim Type" name="ClaimType">
+                        <Input placeholder="Enter claim type"/>
+                    </Form.Item>
 
-                <Form.Item label="Claim ID" name="ClaimID">
-                    <Input placeholder="Enter claim ID"/>
-                </Form.Item>
+                    <Form.Item label="Claim ID" name="ClaimID">
+                        <Input placeholder="Enter claim ID"/>
+                    </Form.Item>
 
-                <Form.Item label="User ID" name="UserID">
-                    <Input placeholder="Enter user ID"/>
-                </Form.Item>
+                    <Form.Item label="User ID" name="UserID">
+                        <Input placeholder="Enter user ID"/>
+                    </Form.Item>
 
-                <Form.Item label="Document Type" name="DocumentType">
-                    <Input placeholder="Enter document type"/>
-                </Form.Item>
+                    <Form.Item label="Document Type" name="DocumentType">
+                        <Input placeholder="Enter document type"/>
+                    </Form.Item>
+                    <Form.Item label="Date" name="Date">
+                        <DatePicker style={{width: "100%"}}/>
+                    </Form.Item>
 
-                <Form.Item label="Date" name="Date">
-                    <DatePicker style={{width: "100%"}}/>
-                </Form.Item>
+                </Form>
+            </div>
+            <div>
+                <Form form={form} layout="vertical" onFinish={handleSubmit} className="document-form">
 
-                <Form.Item label="Filename" name="Filename">
-                    <Input placeholder="Enter filename"/>
-                </Form.Item>
+                    <Form.Item label="Filename" name="Filename">
+                        <Input placeholder="Enter filename"/>
+                    </Form.Item>
 
-                <Form.Item label="Description" name="Description">
-                    <Input.TextArea rows={4} placeholder="Enter description"/>
-                </Form.Item>
+                    <Form.Item label="Description" name="Description">
+                        <Input.TextArea rows={4} placeholder="Enter description"/>
+                    </Form.Item>
 
-                <Form.Item label="Title" name="Title">
-                    <Input placeholder="Enter title"/>
-                </Form.Item>
+                    <Form.Item label="Title" name="Title">
+                        <Input placeholder="Enter title"/>
+                    </Form.Item>
 
-                <Form.Item label="Rejection Reason" name="RejectionReason">
-                    <Input placeholder="Enter rejection reason"/>
-                </Form.Item>
+                    <Form.Item label="Rejection Reason" name="RejectionReason">
+                        <Input placeholder="Enter rejection reason"/>
+                    </Form.Item>
 
-                <Form.Item label="Status" name="Status">
-                    <Select>
-                        <Select.Option value="Pending">Pending</Select.Option>
-                        <Select.Option value="Approved">Approved</Select.Option>
-                        <Select.Option value="Rejected">Rejected</Select.Option>
-                    </Select>
-                </Form.Item>
+                    <Form.Item label="Status" name="Status">
+                        <Select>
+                            <Select.Option value="Pending">Pending</Select.Option>
+                            <Select.Option value="Approved">Approved</Select.Option>
+                            <Select.Option value="Rejected">Rejected</Select.Option>
+                        </Select>
+                    </Form.Item>
 
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={submitting}>
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={submitting}>
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
         </div>
     );
 };
