@@ -120,7 +120,7 @@ export const CardBox = (props: any) => {
                         </Popover>
                     </div>
                     <Button type="primary">apply</Button>
-                    <Button style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> 审批证书</Button>
+                    <Button style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> apply cert</Button>
                 </Card>
 
             ))}
