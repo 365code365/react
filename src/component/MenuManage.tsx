@@ -56,14 +56,18 @@ export const MenuManage = (prop: any) => {
     return (<>
 
         <div style={{marginLeft: '300px'}}>
+            <div style={{border: '1px solid black', padding: '10px', borderRadius: '10px', textAlign: 'center'}}>
+                <h2>this page permission page</h2>
+            </div>
             <div style={{marginLeft: '20px', marginTop: '20px'}}>
-                <label>please select student:</label> <Select
-                mode="tags"
-                style={{minWidth: '200px'}}
-                placeholder="Tags Mode"
-                onChange={handleChange}
-                options={options}
-            />
+                <div style={{margin: '10px'}}> Please select person</div>
+                <Select
+                    mode="tags"
+                    style={{minWidth: '200px'}}
+                    placeholder="Tags Mode"
+                    onChange={handleChange}
+                    options={options}
+                />
             </div>
             <div style={{marginLeft: '20px', marginTop: '20px'}}>
 
