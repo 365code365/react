@@ -2,11 +2,11 @@ import React, {CSSProperties, useEffect, useState} from 'react';
 import {Menu} from 'antd';
 import {CardBox} from '../component/CardBox';
 import {UserOutlined} from '@ant-design/icons';
-import {DocumentManage} from "../component/DocumentManage";
 import StudentManagement from "../component/StudentManagement";
 import {getMenuList} from "../api/menu";
 import { JSX } from 'react/jsx-runtime';
 import {MenuManage} from "../component/MenuManage";
+import DocumentManage from "../component/DocumentManage";
 
 const initialCustomStyle: CSSProperties = {
     color: 'blue',
