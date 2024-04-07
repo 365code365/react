@@ -77,7 +77,7 @@ export const CardBox = (props: any) => {
         <div>
             <Button onClick={() => {
                 setIsModalOpen(true)
-            }} style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> 创建一个证书</Button>
+            }} style={{marginLeft: '10px', marginTop: '10px'}} type={'primary'}> Create Certificate</Button>
         </div>
         <div style={{
             display: 'flex',
