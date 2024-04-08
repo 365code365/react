@@ -2,11 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 32%;
 }
 
 .document-form {
-    width: 500px;
     padding: 20px;
     border: 1px solid #d9d9d9;
     border-radius: 5px;
