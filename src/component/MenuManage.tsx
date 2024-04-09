@@ -2,6 +2,9 @@ import {Button, Checkbox, Select, SelectProps} from "antd"
 import {SetStateAction, useEffect, useState} from "react";
 import {getAllUser} from "../api/loginApi";
 import "../css/CreateCertForm.css";
+import {Simulate} from "react-dom/test-utils";
+import submit = Simulate.submit;
+import {batchAddMenu} from "../api/menu";
 
 export const MenuManage = (prop: any) => {
     const [options, setOptions] = useState([{}]);
@@ -9,14 +12,13 @@ export const MenuManage = (prop: any) => {
     const [checked1, setChecked1] = useState(false);
     const [checked2, setChecked2] = useState(false);
     const [checked3, setChecked3] = useState(false);
+    const [formData, setFormData] = useState<any>({});
 
 
     useEffect(() => {
         const fetchData = async () => {
             let studdentRes: any = await getAllUser();
-            console.log('studdentRes', studdentRes)
             let studentList = getStudentList(studdentRes);
-            console.log('studentList', studentList)
             setOptions(studentList)
         }
         fetchData()
@@ -37,20 +39,58 @@ export const MenuManage = (prop: any) => {
     }
 
 
-    function handleChange(e: any) {
-
+    function handleChange(key: string, e: any) {
+        if (formData['userId'] && key == 'userId') {
+            formData['userId'] = e;
+        } else {
+            console.log('key', key)
+            formData[key] = e;
+        }
     }
 
-    function onChange1(e: any) {
+    function studentManageChange(e: any) {
         setChecked1(e.target.checked);
     }
 
-    function onChange2(e: any) {
+    function documentManageChange(e: any) {
         setChecked2(e.target.checked);
     }
 
-    function onChange3(e: any) {
+    function menuManageChange(e: any) {
         setChecked3(e.target.checked);
+    }
+
+    function buildParam(formData: any) {
+        let userId = formData.userId;
+        delete formData.userId
+        console.log('formData', formData)
+        let arr: { MenuTitle: string; PageKey: string; UserID: any; BtnPermitsFlag: any; }[] = []
+        userId.forEach((item: any) => {
+
+            for (let key in formData) {
+                let formDatum = formData[key];
+                let obj = {
+                    MenuTitle: key,
+                    PageKey: key,
+                    UserID: item,
+                    BtnPermitsFlag: formData[key].join(","),
+                }
+                arr.push(obj)
+            }
+
+        })
+
+        console.log('arr', arr)
+        return arr
+
+    }
+
+    async function submitForm() {
+
+        let buildParam1 = buildParam(formData);
+
+        let res = await batchAddMenu(buildParam1)
+        console.log('res', res)
     }
 
     return (<>
@@ -65,14 +105,16 @@ export const MenuManage = (prop: any) => {
                     mode="tags"
                     style={{minWidth: '200px'}}
                     placeholder="Tags Mode"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                        handleChange("userId", e)
+                    }}
                     options={options}
                 />
             </div>
             <div style={{marginLeft: '20px', marginTop: '20px'}}>
 
                 <div>
-                    <Checkbox checked={checked1} onChange={onChange1}>
+                    <Checkbox checked={checked1} onChange={studentManageChange}>
                         <div className={'menu-item'}>StudentManage</div>
                     </Checkbox>
                     <div>
@@ -80,17 +122,21 @@ export const MenuManage = (prop: any) => {
                             mode="tags"
                             style={{minWidth: '200px'}}
                             placeholder="Tags Mode"
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                handleChange("StudentManage", e)
+                            }}
                             options={[
                                 {label: 'add', value: 'add'},
                                 {label: 'del', value: 'del'},
+                                {label: 'update', value: 'update'},
                                 {label: 'import', value: 'import'},
+                                {label: 'view', value: 'view'},
                             ]}/> : ''}
                     </div>
                 </div>
 
                 <div>
-                    <Checkbox checked={checked2} onChange={onChange2}>
+                    <Checkbox checked={checked2} onChange={documentManageChange}>
                         <div className={'menu-item'}>DocumentManage</div>
                     </Checkbox>
                     <div>
@@ -98,16 +144,20 @@ export const MenuManage = (prop: any) => {
                             mode="tags"
                             style={{minWidth: '200px'}}
                             placeholder="Tags Mode"
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                handleChange("DocumentManage", e)
+                            }}
                             options={[
                                 {label: 'add', value: 'add'},
                                 {label: 'del', value: 'del'},
+                                {label: 'update', value: 'update'},
                                 {label: 'import', value: 'import'},
+                                {label: 'view', value: 'view'},
                             ]}/> : ''}
                     </div>
                 </div>
                 <div>
-                    <Checkbox checked={checked3} onChange={onChange3}>
+                    <Checkbox checked={checked3} onChange={menuManageChange}>
                         <div className={'menu-item'}>MenuManage</div>
                     </Checkbox>
                     <div>
@@ -115,18 +165,22 @@ export const MenuManage = (prop: any) => {
                             mode="tags"
                             style={{minWidth: '200px'}}
                             placeholder="Tags Mode"
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                handleChange("MenuManage", e)
+                            }}
                             options={[
                                 {label: 'add', value: 'add'},
                                 {label: 'del', value: 'del'},
+                                {label: 'update', value: 'update'},
                                 {label: 'import', value: 'import'},
+                                {label: 'view', value: 'view'},
                             ]}/> : ''}
                     </div>
                 </div>
 
             </div>
             <div style={{marginLeft: '20px', marginTop: '20px'}}>
-                <Button type={'primary'}>submit</Button>
+                <Button type={'primary'} onClick={submitForm}>submit</Button>
             </div>
         </div>
     </>)
