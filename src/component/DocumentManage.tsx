@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {Button, Form, Input, Select, DatePicker, Table, TableProps, Tag, Space, Divider, Modal} from "antd";
 import {FormInstance} from "antd/lib/form";
-import "../css/DocumentManagePage.css"; // Import custom CSS for styling
+import "../css/DocumentManagePage.css";
+import ReactQuill from "react-quill"; // Import custom CSS for styling
 
 interface DocumentFormData {
     ID: string;
@@ -161,67 +162,63 @@ const DocumentManage: React.FC = () => {
             <div style={{marginLeft: "20px"}}>
                 <Divider plain>list</Divider>
             </div>
-            <Table style={{marginLeft:'10%'}}  columns={columns} dataSource={data}/>
-            <Modal visible={formVisible} onCancel={() => {
+            <Table style={{marginLeft: '10%'}} columns={columns} dataSource={data}/>
+            <Modal width={'700px'} visible={formVisible} onCancel={() => {
                 setFormVisible(false)
             }}>
-                <div className="document-manage-container"> {/* Apply custom CSS class for styling */}
-                    <div>
-                        <Form form={form} layout="vertical" onFinish={handleSubmit} className="document-form">
-                            <Form.Item label="ID" name="ID">
-                                <Input placeholder="Enter ID"/>
-                            </Form.Item>
+                <div style={{ height: '600px', overflow: 'auto' }}>
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={handleSubmit}
+                        className="document-form"
+                        initialValues={{ remember: true }}
 
-                            <Form.Item label="Claim Type" name="ClaimType">
-                                <Input placeholder="Enter claim type"/>
-                            </Form.Item>
+                    >
 
-                            <Form.Item label="Claim ID" name="ClaimID">
-                                <Input placeholder="Enter claim ID"/>
-                            </Form.Item>
 
-                            <Form.Item label="User ID" name="UserID">
-                                <Input placeholder="Enter user ID"/>
-                            </Form.Item>
+                        <Form.Item label="Claim Type" name="ClaimType">
+                            <Input placeholder="Enter claim type"/>
+                        </Form.Item>
 
-                            <Form.Item label="Document Type" name="DocumentType">
-                                <Input placeholder="Enter document type"/>
-                            </Form.Item>
-                            <Form.Item label="Date" name="Date">
-                                <DatePicker style={{width: "100%"}}/>
-                            </Form.Item>
+                        <Form.Item label="Claim ID" name="ClaimID">
+                            <Input placeholder="Enter claim ID"/>
+                        </Form.Item>
 
-                        </Form>
-                    </div>
-                    <div>
-                        <Form form={form} layout="vertical" onFinish={handleSubmit} className="document-form">
+                        <Form.Item label="User ID" name="UserID">
+                            <Input placeholder="Enter user ID"/>
+                        </Form.Item>
 
-                            <Form.Item label="Filename" name="Filename">
-                                <Input placeholder="Enter filename"/>
-                            </Form.Item>
+                        <Form.Item label="Document Type" name="DocumentType">
+                            <Input placeholder="Enter document type"/>
+                        </Form.Item>
+                        <Form.Item label="Date" name="Date">
+                            <DatePicker style={{width: "100%"}}/>
+                        </Form.Item>
+                        <Form.Item label="Filename" name="Filename">
+                            <Input placeholder="Enter filename"/>
+                        </Form.Item>
 
-                            <Form.Item label="Description" name="Description">
-                                <Input.TextArea rows={4} placeholder="Enter description"/>
-                            </Form.Item>
 
-                            <Form.Item label="Title" name="Title">
-                                <Input placeholder="Enter title"/>
-                            </Form.Item>
+                        <Form.Item label="Title" name="Title">
+                            <Input placeholder="Enter title"/>
+                        </Form.Item>
 
-                            <Form.Item label="Rejection Reason" name="RejectionReason">
-                                <Input placeholder="Enter rejection reason"/>
-                            </Form.Item>
+                        <Form.Item label="Rejection Reason" name="RejectionReason">
+                            <Input placeholder="Enter rejection reason"/>
+                        </Form.Item>
 
-                            <Form.Item label="Status" name="Status">
-                                <Select>
-                                    <Select.Option value="Pending">Pending</Select.Option>
-                                    <Select.Option value="Approved">Approved</Select.Option>
-                                    <Select.Option value="Rejected">Rejected</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        </Form>
-                    </div>
-
+                        <Form.Item label="Status" name="Status">
+                            <Select>
+                                <Select.Option value="Pending">Pending</Select.Option>
+                                <Select.Option value="Approved">Approved</Select.Option>
+                                <Select.Option value="Rejected">Rejected</Select.Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label="Description" name="Description">
+                            <ReactQuill className="quill-input" theme="snow"/>
+                        </Form.Item>
+                    </Form>
                 </div>
             </Modal>
         </>
