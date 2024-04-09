@@ -1,13 +1,42 @@
-import {Button, Checkbox, Select, SelectProps} from "antd"
+import {Button, Checkbox, Divider, message, Select, SelectProps, Table} from "antd"
 import {SetStateAction, useEffect, useState} from "react";
 import {getAllUser} from "../api/loginApi";
 import "../css/CreateCertForm.css";
-import {Simulate} from "react-dom/test-utils";
-import submit = Simulate.submit;
-import {batchAddMenu} from "../api/menu";
+import {batchAddMenu, getMenuAllList} from "../api/menu";
+import '../css/common.css'
+
+const columns = [
+    {
+        title: 'ID',
+        dataIndex: 'ID',
+        key: 'ID',
+    },
+    {
+        title: 'Menu Title',
+        dataIndex: 'MenuTitle',
+        key: 'MenuTitle',
+    },
+    {
+        title: 'Page Key',
+        dataIndex: 'PageKey',
+        key: 'PageKey',
+    },
+    {
+        title: 'User ID',
+        dataIndex: 'UserID',
+        key: 'UserID',
+    },
+    {
+        title: 'Btn Permits Flag',
+        dataIndex: 'BtnPermitsFlag',
+        key: 'BtnPermitsFlag',
+    },
+];
+
 
 export const MenuManage = (prop: any) => {
     const [options, setOptions] = useState([{}]);
+    const [dataSource, setDataSource] = useState<any>([]);
 
     const [checked1, setChecked1] = useState(false);
     const [checked2, setChecked2] = useState(false);
@@ -19,16 +48,22 @@ export const MenuManage = (prop: any) => {
         const fetchData = async () => {
             let studdentRes: any = await getAllUser();
             let studentList = getStudentList(studdentRes);
+
             setOptions(studentList)
         }
+        const fetchMenuData = async () => {
+            let menuRes: any = await getMenuAllList();
+            setDataSource(menuRes['data'])
+        }
         fetchData()
+        fetchMenuData()
     }, [])
 
 
     function getStudentList(res: any) {
         let arr: SetStateAction<{}[]> = []
         res['data'].forEach((item: any) => {
-            console.log("item", item)
+
             let value = {
                 value: item['UserID'],
                 label: item['FullName'],
@@ -43,7 +78,7 @@ export const MenuManage = (prop: any) => {
         if (formData['userId'] && key == 'userId') {
             formData['userId'] = e;
         } else {
-            console.log('key', key)
+
             formData[key] = e;
         }
     }
@@ -62,8 +97,10 @@ export const MenuManage = (prop: any) => {
 
     function buildParam(formData: any) {
         let userId = formData.userId;
+        if (!userId) {
+            message.warning("please select person")
+        }
         delete formData.userId
-        console.log('formData', formData)
         let arr: { MenuTitle: string; PageKey: string; UserID: any; BtnPermitsFlag: any; }[] = []
         userId.forEach((item: any) => {
 
@@ -80,7 +117,6 @@ export const MenuManage = (prop: any) => {
 
         })
 
-        console.log('arr', arr)
         return arr
 
     }
@@ -90,13 +126,12 @@ export const MenuManage = (prop: any) => {
         let buildParam1 = buildParam(formData);
 
         let res = await batchAddMenu(buildParam1)
-        console.log('res', res)
     }
 
     return (<>
 
-        <div style={{marginLeft: '300px'}}>
-            <div style={{border: '1px solid black', padding: '10px', borderRadius: '10px', textAlign: 'center'}}>
+        <div style={{marginLeft: '300px'}} className={'common-select'}>
+            <div style={{padding: '10px', borderRadius: '10px', textAlign: 'center'}}>
                 <h2>this page permission page</h2>
             </div>
             <div style={{marginLeft: '20px', marginTop: '20px'}}>
@@ -111,7 +146,7 @@ export const MenuManage = (prop: any) => {
                     options={options}
                 />
             </div>
-            <div style={{marginLeft: '20px', marginTop: '20px'}}>
+            <div style={{marginLeft: '20px', marginTop: '20px'}} className={'common-select'}>
 
                 <div>
                     <Checkbox checked={checked1} onChange={studentManageChange}>
@@ -134,7 +169,6 @@ export const MenuManage = (prop: any) => {
                             ]}/> : ''}
                     </div>
                 </div>
-
                 <div>
                     <Checkbox checked={checked2} onChange={documentManageChange}>
                         <div className={'menu-item'}>DocumentManage</div>
@@ -182,6 +216,10 @@ export const MenuManage = (prop: any) => {
             <div style={{marginLeft: '20px', marginTop: '20px'}}>
                 <Button type={'primary'} onClick={submitForm}>submit</Button>
             </div>
+        </div>
+        <Divider>menu list</Divider>
+        <div style={{marginLeft: '20%'}} className={'common-select'}>
+            <Table dataSource={dataSource} columns={columns}/>
         </div>
     </>)
 }
