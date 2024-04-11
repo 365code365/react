@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Table, Button, Modal, Form, Input, Select, Upload} from 'antd';
-import { FormInstance } from 'antd/lib/form';
+import {FormInstance} from 'antd/lib/form';
 import * as XLSX from 'xlsx';
 import {UploadOutlined} from "@ant-design/icons";
 import {login} from "../api/loginApi";
+import {createUser, list} from "../api/cert/user";
 
 interface Student {
     UserID: number;
@@ -22,14 +23,24 @@ const StudentManagement: React.FC = () => {
     // Table columns configuration
     const columns = [
         // { title: 'UserID', dataIndex: 'UserID', key: 'UserID' },
-        { title: 'FullName', dataIndex: 'FullName', key: 'FullName' },
-        { title: 'Role', dataIndex: 'Role', key: 'Role' },
-        { title: 'Grade', dataIndex: 'Grade', key: 'Grade' },
-        { title: 'Email', dataIndex: 'Email', key: 'Email' },
-        { title: 'PasswordHash', dataIndex: 'PasswordHash', key: 'PasswordHash' },
-        { title: 'Gender', dataIndex: 'Gender', key: 'Gender', render: (gender: string) => (gender === 'A' ? 'Female' : (gender === 'B' ? 'Male' : 'Unknown')) },
+        {title: 'FullName', dataIndex: 'FullName', key: 'FullName'},
+        {title: 'Role', dataIndex: 'Role', key: 'Role'},
+        {title: 'Grade', dataIndex: 'Grade', key: 'Grade'},
+        {title: 'Email', dataIndex: 'Email', key: 'Email'},
+        {title: 'PasswordHash', dataIndex: 'PasswordHash', key: 'PasswordHash'},
+        {title: 'Gender', dataIndex: 'Gender', key: 'Gender', render: (gender: string) => (gender === 'A' ? 'Female' : (gender === 'B' ? 'Male' : 'Unknown'))},
         // Other columns...
     ];
+
+
+    useEffect(() => {
+        getList()
+    }, []);
+
+    const getList = async () => {
+        let res: any = await list()
+        setStudents(res['data'])
+    }
 
     // Form related states
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -44,8 +55,8 @@ const StudentManagement: React.FC = () => {
         setIsModalVisible(false);
     };
 
-    const onFinish = (values: any) => {
-        console.log('values',values)
+    const onFinish = async (values: any) => {
+        console.log('values', values)
         const newStudent: Student = {
             id: students.length + 1, // Generate new ID
             ...values,
@@ -53,6 +64,10 @@ const StudentManagement: React.FC = () => {
         };
         setStudents([...students, newStudent]);
         setIsModalVisible(false);
+        // console.log('students', students)
+        let data = [newStudent]
+        let res = await createUser(data)
+        console.log('studentsres', res)
         formRef.current?.resetFields();
     };
 
@@ -62,17 +77,17 @@ const StudentManagement: React.FC = () => {
         reader.onload = (event) => {
             const data = event.target?.result;
             if (data) {
-                const workbook = XLSX.read(data, { type: 'binary' });
+                const workbook = XLSX.read(data, {type: 'binary'});
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-                const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+                const excelData = XLSX.utils.sheet_to_json(worksheet, {header: 1}) as any[][];
 
-                console.log('excelData',excelData)
+                console.log('excelData', excelData)
                 // Assuming the first row contains headers
                 if (excelData.length > 1) {
                     const headers: string[] = excelData[0];
-                    console.log('headers',headers)
-                    console.log('headers.indexOf(\'Email\')',headers.indexOf('Email'))
+                    console.log('headers', headers)
+                    console.log('headers.indexOf(\'Email\')', headers.indexOf('Email'))
                     const parsedStudents = excelData.slice(1).map((row: any, index: number) => ({
                         id: index + 1,
                         UserID: row[headers.indexOf('UserID')],
@@ -83,7 +98,7 @@ const StudentManagement: React.FC = () => {
                         PasswordHash: row[headers.indexOf('PasswordHash')],
                         Gender: parseInt(row[headers.indexOf('Gender')]), // Parse string value to integer
                     }));
-                    console.log('parsedStudents',parsedStudents)
+                    console.log('parsedStudents', parsedStudents)
                     setStudents([...students, ...parsedStudents]);
                 }
             }
@@ -92,14 +107,18 @@ const StudentManagement: React.FC = () => {
     };
 
     return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-            <Button  type="primary" onClick={showModal} style={{ marginBottom: '20px',marginRight:'10px' }}>Add Student</Button>
-            <Upload accept=".xlsx, .xls" beforeUpload={(file) => { handleExcelUpload(file); return false; }}>
-                <Button style={{ marginRight: '10px' }} icon={<UploadOutlined />}>Click to Upload xlsx/xls</Button>
+        <div style={{padding: '20px', textAlign: 'center'}}>
+            <Button type="primary" onClick={showModal} style={{marginBottom: '20px', marginRight: '10px'}}>Add
+                Student</Button>
+            <Upload accept=".xlsx, .xls" beforeUpload={(file) => {
+                handleExcelUpload(file);
+                return false;
+            }}>
+                <Button style={{marginRight: '10px'}} icon={<UploadOutlined/>}>Click to Upload xlsx/xls</Button>
             </Upload>
 
-            <div style={{ margin: '0 auto', width: '80%' }}>
-                <Table dataSource={students} columns={columns} />
+            <div style={{margin: '0 auto', width: '80%'}}>
+                <Table dataSource={students} columns={columns}/>
             </div>
 
             <Modal
@@ -111,54 +130,54 @@ const StudentManagement: React.FC = () => {
                 <Form
                     ref={formRef}
                     name="basic"
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 16 }}
+                    labelCol={{span: 6}}
+                    wrapperCol={{span: 16}}
                     onFinish={onFinish}
                 >
                     <Form.Item
                         label="FullName"
                         name="FullName"
-                        rules={[{ required: true, message: 'Please input student FullName!' }]}
+                        rules={[{required: true, message: 'Please input student FullName!'}]}
                     >
-                        <Input />
+                        <Input/>
                     </Form.Item>
 
                     <Form.Item
                         label="Age"
                         name="age"
-                        rules={[{ required: true, message: 'Please input student age!' }]}
+                        rules={[{required: true, message: 'Please input student age!'}]}
                     >
-                        <Input />
+                        <Input/>
                     </Form.Item>
 
                     <Form.Item
                         label="Grade"
                         name="Grade"
-                        rules={[{ required: true, message: 'Please input student grade!' }]}
+                        rules={[{required: true, message: 'Please input student grade!'}]}
                     >
-                        <Input />
+                        <Input/>
                     </Form.Item>
 
                     <Form.Item
                         label="Email"
                         name="Email"
-                        rules={[{ required: true, message: 'Please input student email!' }]}
+                        rules={[{required: true, message: 'Please input student email!'}]}
                     >
-                        <Input type="email" />
+                        <Input type="email"/>
                     </Form.Item>
 
                     <Form.Item
                         label="PasswordHash"
                         name="PasswordHash"
-                        rules={[{ required: true, message: 'Please input student PasswordHash!' }]}
+                        rules={[{required: true, message: 'Please input student PasswordHash!'}]}
                     >
-                        <Input.Password />
+                        <Input.Password/>
                     </Form.Item>
 
                     <Form.Item
                         label="Gender"
                         name="Gender"
-                        rules={[{ required: true, message: 'Please select student gender!' }]}
+                        rules={[{required: true, message: 'Please select student gender!'}]}
                     >
                         <Select>
                             <Select.Option value="0">Female</Select.Option>
@@ -169,7 +188,7 @@ const StudentManagement: React.FC = () => {
                     <Form.Item
                         label="Role"
                         name="Role"
-                        rules={[{ required: true, message: 'Please select Role!' }]}
+                        rules={[{required: true, message: 'Please select Role!'}]}
                     >
                         <Select>
                             <Select.Option value="admin">admin</Select.Option>
@@ -178,7 +197,7 @@ const StudentManagement: React.FC = () => {
                         </Select>
                     </Form.Item>
 
-                    <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+                    <Form.Item wrapperCol={{offset: 6, span: 16}}>
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
