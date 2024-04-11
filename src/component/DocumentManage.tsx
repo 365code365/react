@@ -2,7 +2,8 @@ import React, {useEffect, useState} from "react";
 import {Button, Form, Input, Select, DatePicker, Table, Divider, Modal} from "antd";
 import ReactQuill from "react-quill";
 import {getAllUser} from "../api/loginApi";
-import {FormInstance} from "antd/lib/form"; // Import custom CSS for styling
+import {FormInstance} from "antd/lib/form";
+import {create} from "../api/cert/document"; // Import custom CSS for styling
 
 const documentTypes = [
     {value: "Google", label: "Google"},
@@ -91,7 +92,11 @@ const DocumentManage: React.FC = () => {
             console.log("Submitted values:", values);
             // After submission, you might want to reset the form and do other tasks
             // form.resetFields();
-            setFormVisible(false);
+            let res:any = await create(values)
+            if (res['code']==='00000'){
+                setFormVisible(false);
+            }
+            console.log('res-DocumentFormData',res)
         } catch (error) {
             console.error("Error submitting form:", error);
         }
@@ -144,9 +149,6 @@ const DocumentManage: React.FC = () => {
                             <Select defaultValue="Select an option" style={{minWidth: '200px'}} placeholder="Tags Mode"
                                     options={userList}/>
                         </Form.Item>
-                        <Form.Item label="Document Type" name="DocumentType">
-                            <Input placeholder="Enter document type"/>
-                        </Form.Item>
                         <Form.Item label="Date" name="Date">
                             <DatePicker style={{width: "100%"}}/>
                         </Form.Item>
@@ -166,7 +168,7 @@ const DocumentManage: React.FC = () => {
                         <Form.Item label="Description" name="Description">
                             <ReactQuill className="quill-input" theme="snow"/>
                         </Form.Item>
-                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Form.Item wrapperCol={{offset: 8, span: 16}}>
                             <Button type="primary" htmlType="submit">
                                 Submit
                             </Button>
