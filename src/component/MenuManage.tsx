@@ -1,6 +1,6 @@
 import {Button, Divider, message, Select, Table} from "antd"
 import {SetStateAction, useEffect, useState} from "react";
-import {addRole, getAllUser} from "../api/loginApi";
+import {getAllUser} from "../api/loginApi";
 import "../css/cert/CreateCertForm.css";
 import '../css/common.css'
 
@@ -26,20 +26,18 @@ const columns = [
 export const MenuManage = (prop: any) => {
     const [options, setOptions] = useState([{}]);
     const [dataSource, setDataSource] = useState<any>([]);
-    const [user, setUser] = useState<any>({UserID:'',Role:''});
-
+    const [user, setUser] = useState<any>({UserID: '', Role: ''});
 
     useEffect(() => {
-        const fetchData = async () => {
-            let studdentRes: any = await getAllUser();
-            let studentList = getStudentList(studdentRes);
-
-            setOptions(studentList)
-            setDataSource(studdentRes['data'])
-        }
-        fetchData()
+        getList()
     }, [])
 
+    const getList = async () => {
+        let studdentRes: any = await getAllUser();
+        setDataSource(studdentRes['data'])
+        let studentList = getStudentList(studdentRes);
+        setOptions(studentList)
+    }
 
     function getStudentList(res: any) {
         let arr: SetStateAction<{}[]> = []
@@ -55,11 +53,11 @@ export const MenuManage = (prop: any) => {
     }
 
 
-    function handleChange(type:string,e: any) {
-        if (type === 'role'){
-          user.Role = e
+    function handleChange(type: string, e: any) {
+        if (type === 'role') {
+            user.Role = e
         }
-        if (type=='userId'){
+        if (type == 'userId') {
             user.UserID = e
         }
         setUser(user)
@@ -68,16 +66,15 @@ export const MenuManage = (prop: any) => {
 
 
     async function submitForm() {
-        if (!user.Role){
+        if (!user.Role) {
             message.warning("please select role")
             return
         }
-        if (!user.UserID){
+        if (!user.UserID) {
             message.warning("please select User")
             return
         }
 
-         await addRole(user)
     }
 
     return (<>
@@ -102,17 +99,17 @@ export const MenuManage = (prop: any) => {
 
                 <div>
                     <div><Select
-                          defaultValue="Select an option"
-                            style={{minWidth: '200px'}}
-                            placeholder="Tags Mode"
-                            onChange={(e) => {
-                                handleChange("role", e)
-                            }}
-                            options={[
-                                {label: 'admin', value: 'admin'},
-                                {label: 'teacher', value: 'teacher'},
-                                {label: 'student', value: 'student'}
-                            ]}/>
+                        defaultValue="Select an option"
+                        style={{minWidth: '200px'}}
+                        placeholder="Tags Mode"
+                        onChange={(e) => {
+                            handleChange("role", e)
+                        }}
+                        options={[
+                            {label: 'admin', value: 'admin'},
+                            {label: 'teacher', value: 'teacher'},
+                            {label: 'student', value: 'student'}
+                        ]}/>
                     </div>
                 </div>
             </div>
@@ -121,7 +118,7 @@ export const MenuManage = (prop: any) => {
             </div>
         </div>
         <Divider>menu list</Divider>
-        <div  className={'common-select'}>
+        <div className={'common-select'}>
             <Table dataSource={dataSource} columns={columns}/>
         </div>
     </>)
