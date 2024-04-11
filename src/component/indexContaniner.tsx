@@ -1,10 +1,10 @@
-import { Button, Card, message, Modal, Popover, Steps } from "antd";
-import { CheckCircleOutlined, LoadingOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import {Button, Card, message, Modal, Popover, Steps} from "antd";
+import {CheckCircleOutlined, LoadingOutlined} from "@ant-design/icons";
+import React, {useEffect, useState} from "react";
 import ReactQuill from "react-quill";
 import HTMLPreview from "./HTMLPreview";
 import CreateCertForm from "./CreateCertForm";
-import { create, listAll } from "../api/cert/cert";
+import {create, listAll} from "../api/cert/cert";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -15,7 +15,7 @@ export const IndexContaniner = (props: any) => {
         getListAll();
         // Retrieve user role from localStorage
         const role = localStorage.getItem("UserRole");
-        console.log('role',role)
+        console.log('role', role)
         setUserRole(role);
     }, []);
 
@@ -38,7 +38,7 @@ export const IndexContaniner = (props: any) => {
                         onClick={() => {
                             setIsModalOpen(true);
                         }}
-                        style={{ marginLeft: "10px", marginTop: "10px" }}
+                        style={{marginLeft: "10px", marginTop: "10px"}}
                         type={"primary"}
                     >
                         {" "}
@@ -66,10 +66,11 @@ export const IndexContaniner = (props: any) => {
                             borderRadius: "8px",
                             position: "relative", // Add position relative for delete button positioning
                         }}
-                        cover={<img alt="Applying" src={item["CourseImage"]} style={{ height: 300, objectFit: "cover" }} />}
+                        cover={<img alt="Applying" src={item["CourseImage"]}
+                                    style={{height: 300, objectFit: "cover"}}/>}
                     >
-                        <Card.Meta title={<strong>{item["TitleOfCertification"]}</strong>} />
-                        <div style={{ marginBottom: "10px", marginTop: "15px" }}>
+                        <Card.Meta title={<strong>{item["TitleOfCertification"]}</strong>}/>
+                        <div style={{marginBottom: "10px", marginTop: "15px"}}>
                             <Popover
                                 placement="top"
                                 trigger="click"
@@ -82,7 +83,7 @@ export const IndexContaniner = (props: any) => {
                                             overflowY: "auto",
                                         }}
                                     >
-                                        <HTMLPreview htmlContent={item["CourseDesc"]} />
+                                        <HTMLPreview htmlContent={item["CourseDesc"]}/>
                                     </div>
                                 }
                             >
@@ -92,14 +93,14 @@ export const IndexContaniner = (props: any) => {
                         <Button type="primary">Show My Apply</Button>
                         {userRole === "admin" && ( // Only show delete button for admin users
                             <Button
-                                style={{ position: "absolute", top: 0, right: 0 }} // Position the delete button
+                                style={{position: "absolute", top: 0, right: 0}} // Position the delete button
                                 onClick={() => handleDelete(item['id'])} // Pass the item ID to the delete function
                                 type={"primary"}
                             >
                                 Delete
                             </Button>
                         )}
-                        <Button style={{ marginLeft: "10px", marginTop: "10px" }} type={"primary"}>
+                        <Button style={{marginLeft: "10px", marginTop: "10px"}} type={"primary"}>
                             {" "}
                             Apply Cert
                         </Button>
