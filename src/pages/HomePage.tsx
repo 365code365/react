@@ -1,6 +1,6 @@
 import React, {CSSProperties, useEffect, useState} from 'react';
 import {Menu, Button} from 'antd';
-import {CardBox} from '../component/CardBox';
+import {IndexContaniner} from '../component/indexContaniner';
 import {UserOutlined, LogoutOutlined} from '@ant-design/icons';
 import StudentManagement from "../component/StudentManagement";
 import {getMenuList} from "../api/menu";
@@ -20,7 +20,7 @@ const initialCustomStyle: CSSProperties = {
 
 // Setting menu
 const menuItems = [
-    {key: 'Home', item: CardBox, menuName: 'Home', show: false},
+    {key: 'Home', item: IndexContaniner, menuName: 'Home', show: false},
     {key: 'StudentManage', item: StudentManagement, menuName: 'StudentManage', show: false},
     {key: 'DocumentManage', item: DocumentManage, menuName: 'DocumentManage', show: false},
     // {key: 'MenuManage', item: MenuManage, menuName: 'MenuManage', show: false}

@@ -5,10 +5,11 @@ import ReactQuill from "react-quill";
 import HTMLPreview from "./HTMLPreview";
 import CreatCert from "./CreateCertForm";
 import CreateCertForm from "./CreateCertForm";
+import {create} from "../api/cert/cert";
 
 
 const {Step} = Steps;
-export const CardBox = (props: any) => {
+export const IndexContaniner = (props: any) => {
 
 
     const desc = "<!DOCTYPE html>\n" +
@@ -128,6 +129,8 @@ export const CardBox = (props: any) => {
                 setIsModalOpen(false)
             }} onCreate={(values) => {
                 console.log('values', values)
+                let res = create(values)
+                console.log('cert create', res)
             }} key={'11'} visible={isModalOpen}/>
         </div>
 
