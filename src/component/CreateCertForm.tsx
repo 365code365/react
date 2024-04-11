@@ -1,10 +1,11 @@
-import React, {SetStateAction, useEffect, useState} from "react";
-import {Modal, Form, Input, Select, Button, Upload, message} from "antd";
+import React, { SetStateAction, useEffect, useState } from "react";
+import { Modal, Form, Input, Select, Button, Upload, message, DatePicker } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../css/cert/CreateCertForm.css"; // import  css
-import {UploadOutlined, PlusOutlined} from '@ant-design/icons';
-import {getAllUser} from "../api/loginApi";
+import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
+import { getAllUser } from "../api/loginApi";
+import moment from 'moment'; // Import moment library for date formatting
 
 type CreateCertFormProps = {
     visible: boolean;
@@ -19,7 +20,6 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                                                        }) => {
     const [form] = Form.useForm();
     const [imageUrl, setImageUrl] = useState<string | null>(null);
-
     const [options, setOptions] = useState([{}]);
 
     useEffect(() => {
@@ -35,7 +35,6 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
     function getUserList(res: any) {
         let arr: SetStateAction<{}[]> = []
         res['data'].forEach((item: any) => {
-
             let value = {
                 value: item['UserID'],
                 label: item['FullName'],
@@ -44,7 +43,6 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
         })
         return arr
     }
-
 
     // upload image success result
     const onUploadChange = (info: any) => {
@@ -60,22 +58,29 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
         const isImage = file.type.startsWith('image/');
         if (!isImage) {
             message.error('You can only upload image files!');
+        } else {
+            getBase64(file, (imageUrl: string) => {
+                setImageUrl(imageUrl);
+                form.setFieldsValue({ CourseImage: imageUrl }); // Assign base64 string to form field
+            });
         }
-        console.log('File', file)
-        setImageUrl(URL.createObjectURL(file));
         return false;
+    };
+
+    const getBase64 = (file: File, callback: (imageUrl: string) => void) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result as string));
+        reader.readAsDataURL(file);
     };
 
     const uploadButton = (
         <div>
-            {imageUrl ? <img src={imageUrl} alt="avatar" style={{width: '100%'}}/> : <PlusOutlined/>}
-            <div style={{marginTop: 8}}>Upload</div>
+            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : <PlusOutlined />}
+            <div style={{ marginTop: 8 }}>Upload</div>
         </div>
     );
 
-    const handleChange = (e: any) => {
-
-    }
+    const handleChange = (e: any) => { };
 
     return (
         <Modal
@@ -88,6 +93,12 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                 form
                     .validateFields()
                     .then((values) => {
+
+                        values.SubmissionStartDate = moment(values.SubmissionStartDate).format("YYYY-MM-DD HH:mm");
+                        values.SubmissionEndDate = moment(values.SubmissionEndDate).format("YYYY-MM-DD HH:mm");
+                        values.CourseStart = moment(values.CourseStart).format("YYYY-MM-DD HH:mm");
+                        values.CourseEnd = moment(values.CourseEnd).format("YYYY-MM-DD HH:mm");
+
                         form.resetFields();
                         onCreate(values);
                     })
@@ -100,11 +111,11 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                 <Form.Item
                     name="selectedStudent"
                     label="Select User"
-                    rules={[{required: true, message: "Please select the User."}]}
+                    rules={[{ required: true, message: "Please select the User." }]}
                 >
                     <Select
                         defaultValue="Select an option"
-                        style={{minWidth: '200px'}}
+                        style={{ minWidth: '200px' }}
                         placeholder="Tags Mode"
                         onChange={(e) => {
                             handleChange(e)
@@ -116,14 +127,15 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                 <Form.Item
                     name="TitleOfCertification"
                     label="Certificate TitleOfCertification"
-                    rules={[{required: true, message: "Please enter the TitleOfCertification"}]}
+                    rules={[{ required: true, message: "Please enter the TitleOfCertification" }]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
+
                 <Form.Item
                     name="NameOfTrainingProvider"
                     label="NameOfTrainingProvider"
-                    rules={[{required: true, message: "Please enter the NameOfTrainingProvider."}]}
+                    rules={[{ required: true, message: "Please enter the NameOfTrainingProvider." }]}
                 >
                     <Select>
                         <Select.Option value="Google">Google</Select.Option>
@@ -134,30 +146,49 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                 <Form.Item
                     name="CourseStart"
                     label="Certificate CourseStart"
-                    rules={[{required: true, message: "Please enter the CourseStart"}]}
+                    rules={[{ required: true, message: "Please enter the CourseStart" }]}
                 >
-                    <Input/>
+                    <DatePicker style={{ width: "100%" }} showTime format="YYYY-MM-DD HH:mm" />
                 </Form.Item>
 
                 <Form.Item
                     name="CourseEnd"
                     label="Certificate CourseEnd"
-                    rules={[{required: true, message: "Please enter the CourseEnd"}]}
+                    rules={[{ required: true, message: "Please enter the CourseEnd" }]}
                 >
-                    <Input/>
+                    <DatePicker style={{ width: "100%" }} showTime format="YYYY-MM-DD HH:mm" />
                 </Form.Item>
+
+                <Form.Item
+                    name="SubmissionEndDate"
+                    label="Certificate SubmissionEndDate"
+                    rules={[{ required: true, message: "Please enter the SubmissionEndDate" }]}
+                >
+                    <DatePicker style={{ width: "100%" }} showTime format="YYYY-MM-DD HH:mm" />
+                </Form.Item>
+
+                <Form.Item
+                    name="SubmissionStartDate"
+                    label="Certificate SubmissionStartDate"
+                    rules={[{ required: true, message: "Please enter the SubmissionStartDate" }]}
+                >
+                    <DatePicker style={{ width: "100%" }} showTime format="YYYY-MM-DD HH:mm" />
+                </Form.Item>
+
                 <Form.Item
                     name="CourseDesc"
                     label="Certificate CourseDescription"
-                    rules={[{required: true, message: "Please enter the certificate description."}]}
+                    rules={[{ required: true, message: "Please enter the certificate description." }]}
                 >
-                    <ReactQuill className="quill-input" theme="snow"/>
+                    <ReactQuill className="quill-input" theme="snow" />
                 </Form.Item>
+
                 <Form.Item
                     name="CourseImage"
                     label="Upload Image"
                 >
                     <Upload
+                        accept={'.jpg,.png'}
                         listType="picture-card"
                         showUploadList={false}
                         beforeUpload={beforeUpload}
