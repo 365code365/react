@@ -82,7 +82,7 @@ export const MenuManage = (prop: any) => {
 
     return (<>
 
-        <div style={{marginLeft: '300px'}} className={'common-select'}>
+        <div className={'common-select'}>
             <div style={{padding: '10px', borderRadius: '10px', textAlign: 'center'}}>
                 <h2>this page permission page</h2>
             </div>
@@ -98,7 +98,7 @@ export const MenuManage = (prop: any) => {
                     options={options}
                 />
             </div>
-            <div style={{marginLeft: '20px', marginTop: '20px'}} className={'common-select'}>
+            <div style={{marginTop: '20px'}} className={'common-select'}>
 
                 <div>
                     <div><Select
@@ -121,7 +121,7 @@ export const MenuManage = (prop: any) => {
             </div>
         </div>
         <Divider>menu list</Divider>
-        <div style={{marginLeft: '20%'}} className={'common-select'}>
+        <div  className={'common-select'}>
             <Table dataSource={dataSource} columns={columns}/>
         </div>
     </>)

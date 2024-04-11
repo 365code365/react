@@ -1,194 +1,149 @@
-import React, {useState} from "react";
-import {Button, Form, Input, Select, DatePicker, Table, TableProps, Tag, Space, Divider, Modal} from "antd";
-import {FormInstance} from "antd/lib/form";
-import "../css/DocumentManagePage.css";
-import ReactQuill from "react-quill"; // Import custom CSS for styling
+import React, {useEffect, useState} from "react";
+import {Button, Form, Input, Select, DatePicker, Table, Divider, Modal} from "antd";
+import ReactQuill from "react-quill";
+import {getAllUser} from "../api/loginApi";
+import {FormInstance} from "antd/lib/form"; // Import custom CSS for styling
+
+const documentTypes = [
+    {value: "Google", label: "Google"},
+    {value: "Microsoft", label: "Microsoft"}
+];
+
+const data = [
+    {
+        key: '1',
+        ID: '1',
+        ClaimType: 'Type A',
+        ClaimID: '123',
+        UserID: 'user1',
+        DocumentType: 'Type X',
+        Date: '2024-04-11',
+        Filename: 'file1.txt',
+        Description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        RejectionReason: '',
+        Status: 'Pending'
+    },
+    {
+        key: '2',
+        ID: '2',
+        ClaimType: 'Type B',
+        ClaimID: '456',
+        UserID: 'user2',
+        DocumentType: 'Type Y',
+        Date: '2024-04-10',
+        Filename: 'file2.doc',
+        Description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        RejectionReason: 'Invalid format',
+        Status: 'Rejected'
+    },
+    {
+        key: '3',
+        ID: '3',
+        ClaimType: 'Type C',
+        ClaimID: '789',
+        UserID: 'user3',
+        DocumentType: 'Type Z',
+        Date: '2024-04-09',
+        Filename: 'file3.pdf',
+        Description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        RejectionReason: '',
+        Status: 'Approved'
+    },
+];
+
 
 interface DocumentFormData {
-    ID: string;
+    Title: string;
     ClaimType: string;
-    ClaimID: string;
     UserID: string;
     DocumentType: string;
-    Date: string;
+    Date: string; // You might want to use a Date type here depending on your backend
     Filename: string;
-    Description: string;
-    Title: string;
     RejectionReason: string;
     Status: string;
 }
 
-interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
-}
 
 const DocumentManage: React.FC = () => {
     const [form] = useState<FormInstance<DocumentFormData>>();
-    const [submitting, setSubmitting] = useState(false);
     const [formVisible, setFormVisible] = useState(false);
+    const [userList, setUserList] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const studentRes: any = await getAllUser();
+                const studentList = studentRes.data.map((item: any) => ({
+                    value: item.UserID,
+                    label: item.FullName
+                }));
+                setUserList(studentList);
+            } catch (error) {
+                console.error("Error fetching user list:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handleSubmit = async (values: DocumentFormData) => {
-        setSubmitting(true);
-        // Here you can handle the form submission, such as sending data to the server
-        console.log("Submitted values:", values);
-        // After submission, you might want to reset the form and do other tasks
-        // form.resetFields();
-        setSubmitting(false);
+        try {
+            // Here you can handle the form submission, such as sending data to the server
+            console.log("Submitted values:", values);
+            // After submission, you might want to reset the form and do other tasks
+            // form.resetFields();
+            setFormVisible(false);
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        }
     };
 
-
-    const columns: TableProps<DataType>['columns'] = [
-        {
-            title: 'ID',
-            dataIndex: 'ID',
-            key: 'ID'
-        },
-        {
-            title: 'ClaimType',
-            dataIndex: 'ClaimType',
-            key: 'ClaimType',
-        },
-        {
-            title: 'ClaimlD',
-            dataIndex: 'ClaimlD',
-            key: 'ClaimlD',
-        },
-        {
-            title: 'UserlD',
-            dataIndex: 'UserlD',
-            key: 'UserlD',
-        },
-        {
-            title: 'DocumentType',
-            dataIndex: 'DocumentType',
-            key: 'DocumentType',
-        },
-        {
-            title: 'Date',
-            dataIndex: 'Date',
-            key: 'Date',
-        },
-        {
-            title: 'Filenare',
-            dataIndex: 'Filenare',
-            key: 'Filenare',
-        },
-        {
-            title: 'Description',
-            dataIndex: 'Description',
-            key: 'Description',
-        },
-        {
-            title: 'Title',
-            dataIndex: 'Title',
-            key: 'Title',
-        },
-        {
-            title: 'RejectionReason',
-            dataIndex: 'RejectionReason',
-            key: 'RejectionReason',
-        },
-        {
-            title: 'Status',
-            dataIndex: 'Status',
-            key: 'Status',
-        },
-        // {
-        //     title: 'Tags',
-        //     key: 'tags',
-        //     dataIndex: 'tags',
-        //     render: (_, {tags}) => (
-        //         <>
-        //             {tags.map((tag) => {
-        //                 let color = tag.length > 5 ? 'geekblue' : 'green';
-        //                 if (tag === 'loser') {
-        //                     color = 'volcano';
-        //                 }
-        //                 return (
-        //                     <Tag color={color} key={tag}>
-        //                         {tag.toUpperCase()}
-        //                     </Tag>
-        //                 );
-        //             })}
-        //         </>
-        //     ),
-        // },
-        // {
-        //     title: 'Action',
-        //     key: 'action',
-        //     render: (_, record) => (
-        //         <Space size="middle">
-        //             <a>Invite {record.name}</a>
-        //             <a>Delete</a>
-        //         </Space>
-        //     ),
-        // },
+    const columns = [
+        {title: 'ID', dataIndex: 'ID', key: 'ID'},
+        {title: 'ClaimType', dataIndex: 'ClaimType', key: 'ClaimType'},
+        {title: 'ClaimID', dataIndex: 'ClaimID', key: 'ClaimID'},
+        {title: 'UserID', dataIndex: 'UserID', key: 'UserID'},
+        {title: 'DocumentType', dataIndex: 'DocumentType', key: 'DocumentType'},
+        {title: 'Date', dataIndex: 'Date', key: 'Date'},
+        {title: 'Filename', dataIndex: 'Filename', key: 'Filename'},
+        {title: 'Description', dataIndex: 'Description', key: 'Description'},
+        {title: 'RejectionReason', dataIndex: 'RejectionReason', key: 'RejectionReason'},
+        {title: 'Status', dataIndex: 'Status', key: 'Status'}
     ];
-
-    const data: DataType[] = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sydney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
-
 
     return (
         <>
-            <Button style={{margin: '10px'}} size={'large'} type={'primary'} onClick={() => {
-                setFormVisible(true)
-            }}>add document</Button>
+            <Button style={{margin: '10px'}} size="large" type="primary" onClick={() => setFormVisible(true)}>Add
+                Document</Button>
             <div style={{marginLeft: "20px"}}>
-                <Divider plain>list</Divider>
+                <Divider plain>List</Divider>
             </div>
             <Table style={{marginLeft: '10%'}} columns={columns} dataSource={data}/>
-            <Modal width={'700px'} visible={formVisible} onCancel={() => {
-                setFormVisible(false)
-            }}>
-                <div style={{ height: '600px', overflow: 'auto' }}>
+            <Modal width={'700px'}
+                   visible={formVisible}
+                   onCancel={() => setFormVisible(false)} onOk={() => {
+                setFormVisible(true)
+            }}
+                   footer={null}
+            >
+                <div style={{height: '600px', overflow: 'auto'}}>
                     <Form
                         form={form}
                         layout="vertical"
                         onFinish={handleSubmit}
                         className="document-form"
-                        initialValues={{ remember: true }}
-
+                        initialValues={{remember: true}}
                     >
-
-
+                        <Form.Item label="Title" name="Title">
+                            <Input placeholder="Enter title"/>
+                        </Form.Item>
                         <Form.Item label="Claim Type" name="ClaimType">
-                            <Input placeholder="Enter claim type"/>
+                            <Select defaultValue="Select an option" style={{minWidth: '200px'}} placeholder="Tags Mode"
+                                    options={documentTypes}/>
                         </Form.Item>
-
-                        <Form.Item label="Claim ID" name="ClaimID">
-                            <Input placeholder="Enter claim ID"/>
+                        <Form.Item label="Select User" name="UserID">
+                            <Select defaultValue="Select an option" style={{minWidth: '200px'}} placeholder="Tags Mode"
+                                    options={userList}/>
                         </Form.Item>
-
-                        <Form.Item label="User ID" name="UserID">
-                            <Input placeholder="Enter user ID"/>
-                        </Form.Item>
-
                         <Form.Item label="Document Type" name="DocumentType">
                             <Input placeholder="Enter document type"/>
                         </Form.Item>
@@ -198,16 +153,9 @@ const DocumentManage: React.FC = () => {
                         <Form.Item label="Filename" name="Filename">
                             <Input placeholder="Enter filename"/>
                         </Form.Item>
-
-
-                        <Form.Item label="Title" name="Title">
-                            <Input placeholder="Enter title"/>
-                        </Form.Item>
-
                         <Form.Item label="Rejection Reason" name="RejectionReason">
                             <Input placeholder="Enter rejection reason"/>
                         </Form.Item>
-
                         <Form.Item label="Status" name="Status">
                             <Select>
                                 <Select.Option value="Pending">Pending</Select.Option>
@@ -217,6 +165,11 @@ const DocumentManage: React.FC = () => {
                         </Form.Item>
                         <Form.Item label="Description" name="Description">
                             <ReactQuill className="quill-input" theme="snow"/>
+                        </Form.Item>
+                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                            <Button type="primary" htmlType="submit">
+                                Submit
+                            </Button>
                         </Form.Item>
                     </Form>
                 </div>
