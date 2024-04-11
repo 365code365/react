@@ -59,7 +59,7 @@ const HomePage = () => {
                     className={'ul-menu ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark css-dev-only-do-not-override-djtmh8'}>
                     <Button onClick={()=>{
                         navigate("/login")
-                    }} type={'primary'} style={{marginTop: '8px'}}>logout</Button>
+                    }} type={'primary'} style={{marginTop: '8px',backgroundColor:'#001529'}}>logout</Button>
                 </ul>
             </div>
             {menuItemsList.map((page) => (
