@@ -1,12 +1,13 @@
 import React, {CSSProperties, useEffect, useState} from 'react';
-import {Menu} from 'antd';
+import {Menu, Button} from 'antd';
 import {CardBox} from '../component/CardBox';
-import {UserOutlined} from '@ant-design/icons';
+import {UserOutlined, LogoutOutlined} from '@ant-design/icons';
 import StudentManagement from "../component/StudentManagement";
 import {getMenuList} from "../api/menu";
 import {JSX} from 'react/jsx-runtime';
 import {MenuManage} from "../component/MenuManage";
 import DocumentManage from "../component/DocumentManage";
+import {useNavigate} from "react-router-dom";
 
 const initialCustomStyle: CSSProperties = {
     color: 'blue',
@@ -17,7 +18,7 @@ const initialCustomStyle: CSSProperties = {
     transition: 'opacity 0.8s ease-in-out'
 };
 
-//setting menu
+// Setting menu
 const menuItems = [
     {key: 'Home', item: CardBox, menuName: 'Home', show: false},
     {key: 'StudentManage', item: StudentManagement, menuName: 'StudentManage', show: false},
@@ -26,6 +27,9 @@ const menuItems = [
 ];
 
 const HomePage = () => {
+    const navigate = useNavigate();
+
+
     const [currentPage, setCurrentPage] = useState(menuItems[0].key);
 
     const [menuItemsList, setMenuItemsList] = useState([...menuItems])
@@ -34,15 +38,30 @@ const HomePage = () => {
         setCurrentPage(key);
     };
 
+    const handleLogout = () => {
+        // Implement logout logic here
+        console.log("User logged out");
+    };
+
     return (
         <div>
-            <Menu mode="horizontal" theme="dark" style={{textAlign: 'right'}}>
-                {menuItemsList.map((page) => (
-                    <Menu.Item onClick={() => handleItemClick(page.key)} key={page.key} icon={<UserOutlined/>}>
-                        {page.menuName}
-                    </Menu.Item>
-                ))}
-            </Menu>
+            <div style={{display: 'inline-block', width: '90%'}}>
+                <Menu mode="horizontal" theme="dark">
+                    {menuItemsList.map((page) => (
+                        <Menu.Item onClick={() => handleItemClick(page.key)} key={page.key} icon={<UserOutlined/>}>
+                            {page.menuName}
+                        </Menu.Item>
+                    ))}
+                </Menu>
+            </div>
+            <div style={{display: 'inline-block', width: '10%', lineHeight: '56px'}}>
+                <ul style={{height: '46px'}}
+                    className={'ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark css-dev-only-do-not-override-djtmh8'}>
+                    <Button onClick={()=>{
+                        navigate("/login")
+                    }} type={'primary'} style={{marginTop: '8px'}}>logout</Button>
+                </ul>
+            </div>
             {menuItemsList.map((page) => (
                 <div key={page.key} style={{...initialCustomStyle, opacity: currentPage === page.key ? 1 : 0}}>
                     {currentPage === page.key && <page.item/>}

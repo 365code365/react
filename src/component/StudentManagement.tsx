@@ -100,6 +100,7 @@ const StudentManagement: React.FC = () => {
                     }));
                     console.log('parsedStudents', parsedStudents)
                     setStudents([...students, ...parsedStudents]);
+                    createUser(parsedStudents)
                 }
             }
         };
