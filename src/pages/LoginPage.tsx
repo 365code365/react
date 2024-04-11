@@ -35,6 +35,7 @@ const LoginPage = () => {
         if (res['code'] === '00000') {
             //save local storage
             localStorage.setItem("token", res.data.token)
+            localStorage.setItem("UserRole", res.data.Role)
             navigate("/home")
         } else {
             messageApi.warning('log fail ' + res['message']);
