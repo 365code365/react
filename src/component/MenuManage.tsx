@@ -1,7 +1,7 @@
 import {Button, Divider, message, Select, Table} from "antd"
 import {SetStateAction, useEffect, useState} from "react";
 import {addRole, getAllUser} from "../api/loginApi";
-import "../css/CreateCertForm.css";
+import "../css/cert/CreateCertForm.css";
 import '../css/common.css'
 
 const columns = [

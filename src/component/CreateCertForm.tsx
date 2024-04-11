@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Form, Input, Select, Button, Upload, message } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import "../css/CreateCertForm.css"; // import  css
+import "../css/cert/CreateCertForm.css"; // import  css
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
 
 type CreateCertFormProps = {
