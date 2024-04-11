@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import ReactQuill from "react-quill";
 import HTMLPreview from "./HTMLPreview";
 import CreateCertForm from "./CreateCertForm";
-import {create, listAll} from "../api/cert/cert";
+import {create, del, listAll} from "../api/cert/cert";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -21,12 +21,20 @@ export const IndexContaniner = (props: any) => {
 
     const getListAll = async () => {
         let res: any = await listAll();
+
         setCardInfoList(res["data"]);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (item: any) => {
         // Implement delete functionality here
-        console.log("Deleting item with ID:", id);
+        console.log("Deleting item with item:", item);
+        let res:any = await del(item)
+
+        if (res['code'] == '00000') {
+            getListAll()
+            console.log('handleDeleteRes',res)
+            message.info('del success')
+        }
     };
 
     console.log("props", props);
@@ -94,7 +102,7 @@ export const IndexContaniner = (props: any) => {
                         {userRole === "admin" && ( // Only show delete button for admin users
                             <Button
                                 style={{position: "absolute", top: 0, right: 0}} // Position the delete button
-                                onClick={() => handleDelete(item['id'])} // Pass the item ID to the delete function
+                                onClick={() => handleDelete(item)} // Pass the item ID to the delete function
                                 type={"primary"}
                             >
                                 Delete
