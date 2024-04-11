@@ -3,53 +3,11 @@ import {Button, Form, Input, Select, DatePicker, Table, Divider, Modal} from "an
 import ReactQuill from "react-quill";
 import {getAllUser} from "../api/loginApi";
 import {FormInstance} from "antd/lib/form";
-import {create} from "../api/cert/document"; // Import custom CSS for styling
+import {create, list} from "../api/cert/document"; // Import custom CSS for styling
 
 const documentTypes = [
     {value: "Google", label: "Google"},
     {value: "Microsoft", label: "Microsoft"}
-];
-
-const data = [
-    {
-        key: '1',
-        ID: '1',
-        ClaimType: 'Type A',
-        ClaimID: '123',
-        UserID: 'user1',
-        DocumentType: 'Type X',
-        Date: '2024-04-11',
-        Filename: 'file1.txt',
-        Description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        RejectionReason: '',
-        Status: 'Pending'
-    },
-    {
-        key: '2',
-        ID: '2',
-        ClaimType: 'Type B',
-        ClaimID: '456',
-        UserID: 'user2',
-        DocumentType: 'Type Y',
-        Date: '2024-04-10',
-        Filename: 'file2.doc',
-        Description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        RejectionReason: 'Invalid format',
-        Status: 'Rejected'
-    },
-    {
-        key: '3',
-        ID: '3',
-        ClaimType: 'Type C',
-        ClaimID: '789',
-        UserID: 'user3',
-        DocumentType: 'Type Z',
-        Date: '2024-04-09',
-        Filename: 'file3.pdf',
-        Description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        RejectionReason: '',
-        Status: 'Approved'
-    },
 ];
 
 
@@ -69,6 +27,7 @@ const DocumentManage: React.FC = () => {
     const [form] = useState<FormInstance<DocumentFormData>>();
     const [formVisible, setFormVisible] = useState(false);
     const [userList, setUserList] = useState([]);
+    const [datasource, setDatasource] = useState([{}]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -84,7 +43,14 @@ const DocumentManage: React.FC = () => {
             }
         };
         fetchData();
+        getDocumentList()
     }, []);
+
+
+    const getDocumentList = async () => {
+        let res: any = await list();
+        setDatasource(res['data'])
+    }
 
     const handleSubmit = async (values: DocumentFormData) => {
         try {
@@ -92,11 +58,12 @@ const DocumentManage: React.FC = () => {
             console.log("Submitted values:", values);
             // After submission, you might want to reset the form and do other tasks
             // form.resetFields();
-            let res:any = await create(values)
-            if (res['code']==='00000'){
+            let res: any = await create(values)
+            if (res['code'] === '00000') {
                 setFormVisible(false);
+                getDocumentList()
             }
-            console.log('res-DocumentFormData',res)
+            console.log('res-DocumentFormData', res)
         } catch (error) {
             console.error("Error submitting form:", error);
         }
@@ -105,9 +72,7 @@ const DocumentManage: React.FC = () => {
     const columns = [
         {title: 'ID', dataIndex: 'ID', key: 'ID'},
         {title: 'ClaimType', dataIndex: 'ClaimType', key: 'ClaimType'},
-        {title: 'ClaimID', dataIndex: 'ClaimID', key: 'ClaimID'},
         {title: 'UserID', dataIndex: 'UserID', key: 'UserID'},
-        {title: 'DocumentType', dataIndex: 'DocumentType', key: 'DocumentType'},
         {title: 'Date', dataIndex: 'Date', key: 'Date'},
         {title: 'Filename', dataIndex: 'Filename', key: 'Filename'},
         {title: 'Description', dataIndex: 'Description', key: 'Description'},
@@ -122,7 +87,7 @@ const DocumentManage: React.FC = () => {
             <div style={{marginLeft: "20px"}}>
                 <Divider plain>List</Divider>
             </div>
-            <Table style={{marginLeft: '10%'}} columns={columns} dataSource={data}/>
+            <Table style={{marginLeft: '10%'}} columns={columns} dataSource={datasource}/>
             <Modal width={'700px'}
                    visible={formVisible}
                    onCancel={() => setFormVisible(false)} onOk={() => {
