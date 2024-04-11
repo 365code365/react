@@ -8,60 +8,9 @@ import CreateCertForm from "./CreateCertForm";
 import {create, listAll} from "../api/cert/cert";
 
 
-const {Step} = Steps;
 export const IndexContaniner = (props: any) => {
 
-
-    const desc = "<!DOCTYPE html>\n" +
-        "<html lang=\"en\">\n" +
-        "<head>\n" +
-        "    <meta charset=\"UTF-8\">\n" +
-        "    <title>Title</title>\n" +
-        "</head>\n" +
-        "<body>\n" +
-        " <div>sss</div>\n" +
-        "<strong>assaas</strong>\n" +
-        "</body>\n" +
-        "</html>";
-
-
-    const [cardInfoList, setCardInfoList] = useState([
-        // {
-        //     id: 1,
-        //     title: 'Card 1',
-        //     desc: desc,
-        //     image: 'https://th.bing.com/th/id/OIP.QC-Su_ie-QzKBtY74XNNIgHaJ-?rs=1&pid=ImgDetMain',
-        //     currentStep: 0,
-        //     currentStepDesc: "waiting apply"
-        // },
-        // {
-        //     id: 2,
-        //     title: 'Card 1',
-        //     desc: desc,
-        //     image: 'https://th.bing.com/th/id/OIP.QC-Su_ie-QzKBtY74XNNIgHaJ-?rs=1&pid=ImgDetMain',
-        //     currentStep: 1,
-        //     currentStepDesc: "applying"
-        // },
-        //
-        // {
-        //     id: 3,
-        //     title: 'Card 1',
-        //     desc: desc,
-        //     image: 'https://th.bing.com/th/id/OIP.QC-Su_ie-QzKBtY74XNNIgHaJ-?rs=1&pid=ImgDetMain',
-        //     currentStep: 0,
-        //     currentStepDesc: "waiting apply"
-        // },
-        //
-        // {
-        //     id: 4,
-        //     title: 'Card 1',
-        //     desc: desc,
-        //     image: 'https://th.bing.com/th/id/OIP.QC-Su_ie-QzKBtY74XNNIgHaJ-?rs=1&pid=ImgDetMain',
-        //     currentStep: 2,
-        //     currentStepDesc: "waiting apply"
-        // },
-
-    ]);
+    const [cardInfoList, setCardInfoList] = useState([]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
