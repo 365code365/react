@@ -36,13 +36,9 @@ export const MenuManage = (prop: any) => {
             let studentList = getStudentList(studdentRes);
 
             setOptions(studentList)
-        }
-        const fetchMenuData = async () => {
-            let menuRes: any = await getMenuAllList();
-            setDataSource(menuRes['data'])
+            setDataSource(studdentRes['data'])
         }
         fetchData()
-        fetchMenuData()
     }, [])
 
 
