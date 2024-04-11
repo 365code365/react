@@ -13,3 +13,7 @@ export const register = async <T>(data?: object): Promise<T> => {
 export const getAllUser = async <T>(): Promise<T> => {
     return get("/auth/getAllUser",{})
 }
+
+export const addRole = async <T>(data?: object): Promise<T> => {
+    return post("/auth/addRole",data)
+}
