@@ -1,8 +1,7 @@
-import {Button, Checkbox, Divider, message, Select, SelectProps, Table} from "antd"
+import {Button, Divider, message, Select, Table} from "antd"
 import {SetStateAction, useEffect, useState} from "react";
 import {addRole, getAllUser} from "../api/loginApi";
 import "../css/CreateCertForm.css";
-import {getMenuAllList} from "../api/menu";
 import '../css/common.css'
 
 const columns = [
