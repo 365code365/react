@@ -31,8 +31,10 @@ const RegisterPage: React.FC = () => {
 
         let registerForm = {
             FullName: username,
-            PasswordHash: password
+            PasswordHash: password,
+            Role:'student'
         }
+
         let res: any = await register(registerForm)
         console.log('res', res)
         if (res['code'] === '00000') {
