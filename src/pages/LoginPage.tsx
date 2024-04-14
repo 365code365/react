@@ -36,6 +36,7 @@ const LoginPage = () => {
             //save local storage
             localStorage.setItem("token", res.data.token)
             localStorage.setItem("UserRole", res.data.Role)
+            localStorage.setItem("UserID", res.data.UserID)
             navigate("/home")
         } else {
             messageApi.warning('log fail ' + res['message']);

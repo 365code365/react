@@ -1,47 +1,73 @@
-import {Button, Card, message, Modal, Popover, Steps} from "antd";
-import {CheckCircleOutlined, LoadingOutlined} from "@ant-design/icons";
-import React, {useEffect, useState} from "react";
-import ReactQuill from "react-quill";
-import HTMLPreview from "./HTMLPreview";
-import CreateCertForm from "./CreateCertForm";
+import {Button, Card, message, Modal, Popover, Form, Input, DatePicker} from "antd";
+import {useEffect, useState} from "react";
 import {create, del, listAll} from "../api/cert/cert";
+import CreateCertForm from "./CreateCertForm";
+import HTMLPreview from "./HTMLPreview";
+import {createApply} from "../api/cert/courseCertClaim";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [userRole, setUserRole] = useState<string | null>(null); // State to store user role
+    const [userRole, setUserRole] = useState<string | null>(null);
+    const [applyModalVisible, setApplyModalVisible] = useState(false);
+    const [applyForm] = Form.useForm();
+    const [selectedCourseID, setSelectedCourseID] = useState<string | null>(null); // State to store selected course ID
+    const [userID, setUserID] = useState<string | null>(null); // State to store selected course ID
 
     useEffect(() => {
         getListAll();
-        // Retrieve user role from localStorage
         const role = localStorage.getItem("UserRole");
-        console.log('role', role)
         setUserRole(role);
+        setUserID(localStorage.getItem("UserID"))
     }, []);
 
     const getListAll = async () => {
         let res: any = await listAll();
-
         setCardInfoList(res["data"]);
     };
 
     const handleDelete = async (item: any) => {
-        // Implement delete functionality here
         console.log("Deleting item with item:", item);
-        let res:any = await del(item)
-
-        if (res['code'] == '00000') {
-            getListAll()
-            console.log('handleDeleteRes',res)
+        let res: any = await del(item);
+        if (res['code'] === '00000') {
+            getListAll();
             message.info('del success')
         }
     };
 
-    console.log("props", props);
+    const handleApplyCert = (item: any) => {
+        setSelectedCourseID(item.ID); // Set selected course ID
+        setApplyModalVisible(true);
+    };
+
+    const handleApplyCancel = () => {
+        setApplyModalVisible(false);
+    };
+
+    const handleApplySubmit = async (values: any) => {
+        try {
+            // Set CourseAndCertificationID in form values
+            values.ExaminationDate = new Date(values.ExaminationDate);
+            values.CourseAndCertificationID = selectedCourseID;
+            values.UserID = userID
+            console.log("Submitted apply cert values:", values);
+            let res: any = await createApply(values);
+            if (res['code'] === '00000') {
+                setApplyModalVisible(false);
+                message.info("apply success")
+            }
+
+            message.success('Apply Cert submitted successfully!');
+        } catch (error) {
+            console.error("Error submitting apply cert:", error);
+            message.error('Failed to submit apply cert');
+        }
+    };
+
     return (
         <div>
             <div>
-                {userRole === "admin" && ( // Only show create certificate button for admin users
+                {userRole === "admin" && (
                     <Button
                         onClick={() => {
                             setIsModalOpen(true);
@@ -49,7 +75,6 @@ export const IndexContaniner = (props: any) => {
                         style={{marginLeft: "10px", marginTop: "10px"}}
                         type={"primary"}
                     >
-                        {" "}
                         Create Certificate
                     </Button>
                 )}
@@ -65,14 +90,14 @@ export const IndexContaniner = (props: any) => {
             >
                 {cardInfoList.map((item) => (
                     <Card
-                        key={item['id']} // Assuming each card has a unique ID
+                        key={item['id']}
                         style={{
                             maxWidth: 400,
                             margin: "10px",
                             border: "1px solid #d9d9d9",
                             boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
                             borderRadius: "8px",
-                            position: "relative", // Add position relative for delete button positioning
+                            position: "relative",
                         }}
                         cover={<img alt="Applying" src={item["CourseImage"]}
                                     style={{height: 300, objectFit: "cover"}}/>}
@@ -98,20 +123,23 @@ export const IndexContaniner = (props: any) => {
                                 <Button type={"primary"}>Certificate desc</Button>
                             </Popover>
                         </div>
-                        <Button type="primary">Show My Apply</Button>
-                        {userRole === "admin" && ( // Only show delete button for admin users
+                        {userRole === "student" && (
+                            <>
+                                <Button type="primary" style={{marginRight: "10px"}}>
+                                    Show My Apply
+                                </Button>
+                                <Button type="primary" onClick={() => handleApplyCert(item)}>Apply Cert</Button>
+                            </>
+                        )}
+                        {userRole === "admin" && (
                             <Button
-                                style={{position: "absolute", top: 0, right: 0}} // Position the delete button
-                                onClick={() => handleDelete(item)} // Pass the item ID to the delete function
+                                style={{position: "absolute", top: 0, right: 0}}
+                                onClick={() => handleDelete(item)}
                                 type={"primary"}
                             >
                                 Delete
                             </Button>
                         )}
-                        <Button style={{marginLeft: "10px", marginTop: "10px"}} type={"primary"}>
-                            {" "}
-                            Apply Cert
-                        </Button>
                     </Card>
                 ))}
                 <CreateCertForm
@@ -131,6 +159,48 @@ export const IndexContaniner = (props: any) => {
                     key={"11"}
                     visible={isModalOpen}
                 />
+                <Modal
+                    title="Apply Certificate"
+                    visible={applyModalVisible}
+                    onCancel={handleApplyCancel}
+                    onOk={() => applyForm.submit()}
+                    okText="Submit"
+                >
+                    <Form
+                        form={applyForm}
+                        onFinish={handleApplySubmit}
+                        layout="vertical"
+                        initialValues={{CourseAndCertificationID: selectedCourseID}} // Set initial value for CourseAndCertificationID
+                    >
+                        <Form.Item
+                            name="TotalClaimAmount"
+                            label="Total Claim Amount"
+                            rules={[{required: true, message: 'Please enter total claim amount'}]}
+                        >
+                            <Input/>
+                        </Form.Item>
+                        <Form.Item
+                            name="TotalAmountSpent"
+                            label="Total Amount Spent"
+                            rules={[{required: true, message: 'Please enter total amount spent'}]}
+                        >
+                            <Input/>
+                        </Form.Item>
+                        <Form.Item
+                            name="ExaminationDate"
+                            label="Examination Date"
+                            rules={[{required: true, message: 'Please select examination date'}]}
+                        >
+                            <DatePicker style={{width: "100%"}}  format="YYYY-MM-DD"/>
+                        </Form.Item>
+                        <Form.Item
+                            name="Remark"
+                            label="Remark"
+                        >
+                            <Input.TextArea/>
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </div>
         </div>
     );

@@ -11,5 +11,5 @@ export const listAll = async <T>(): Promise<T> => {
 
 
 export const del = async <T>(data?: object): Promise<T> => {
-    return post("/cert/del",data)
+    return post("/cert/del", data)
 }
