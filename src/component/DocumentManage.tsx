@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, Select, DatePicker, Table, Divider, Modal} from "antd";
+import {Button, Form, Input, Select, DatePicker, Table, Divider, Modal, message} from "antd";
 import ReactQuill from "react-quill";
 import {getAllUser} from "../api/loginApi";
 import {FormInstance} from "antd/lib/form";
-import {create, list} from "../api/cert/document"; // Import custom CSS for styling
+import {create, del, list} from "../api/cert/document"; // Import custom CSS for styling
 
 const documentTypes = [
     {value: "Google", label: "Google"},
@@ -28,6 +28,7 @@ const DocumentManage: React.FC = () => {
     const [formVisible, setFormVisible] = useState(false);
     const [userList, setUserList] = useState([]);
     const [datasource, setDatasource] = useState([{}]);
+    const [userRole, setUserRole] = useState<string | null>(null); // State to store user role
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,6 +45,10 @@ const DocumentManage: React.FC = () => {
         };
         fetchData();
         getDocumentList()
+
+        const role = localStorage.getItem("UserRole");
+        console.log('role', role)
+        setUserRole(role);
     }, []);
 
 
@@ -69,6 +74,16 @@ const DocumentManage: React.FC = () => {
         }
     };
 
+    async function handleDelete(record: any) {
+        console.log('record', record)
+        let res: any = await del(record)
+        if (res['code'] === '00000') {
+            getDocumentList()
+            message.info("del success")
+        }
+
+    }
+
     const columns = [
         {title: 'ID', dataIndex: 'ID', key: 'ID'},
         {title: 'ClaimType', dataIndex: 'ClaimType', key: 'ClaimType'},
@@ -77,7 +92,16 @@ const DocumentManage: React.FC = () => {
         {title: 'Filename', dataIndex: 'Filename', key: 'Filename'},
         {title: 'Description', dataIndex: 'Description', key: 'Description'},
         {title: 'RejectionReason', dataIndex: 'RejectionReason', key: 'RejectionReason'},
-        {title: 'Status', dataIndex: 'Status', key: 'Status'}
+        {title: 'Status', dataIndex: 'Status', key: 'Status'},
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (_text: any, record: any) => (
+                // Render delete button only if user is admin
+                userRole === 'admin' && <Button type="primary" onClick={() => handleDelete(record)}>Delete</Button>
+            ),
+        }
     ];
 
     return (

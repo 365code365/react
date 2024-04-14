@@ -9,3 +9,8 @@ export const createUser = async <T>(data?: object[]): Promise<T> => {
 export const list = async <T>(): Promise<T> => {
     return get("/user/list")
 }
+
+
+export const del = async <T>(data?: object): Promise<T> => {
+    return post("/user/del",data)
+}

@@ -7,3 +7,7 @@ export const create = async <T>(data?: object): Promise<T> => {
 export const list = async <T>(): Promise<T> => {
     return get("/document/list")
 }
+
+export const del = async <T>(data?: object): Promise<T> => {
+    return post("/document/del",data)
+}

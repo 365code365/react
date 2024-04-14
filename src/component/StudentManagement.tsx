@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Table, Button, Modal, Form, Input, Select, Upload} from 'antd';
+import {Table, Button, Modal, Form, Input, Select, Upload, message} from 'antd';
 import {FormInstance} from 'antd/lib/form';
 import * as XLSX from 'xlsx';
 import {UploadOutlined} from "@ant-design/icons";
 import {login} from "../api/loginApi";
-import {createUser, list} from "../api/cert/user";
+import {createUser, del, list} from "../api/cert/user";
 
 interface Student {
     UserID: number;
@@ -19,6 +19,16 @@ interface Student {
 const StudentManagement: React.FC = () => {
     // Assume initial student data
     const [students, setStudents] = useState<Student[]>([]);
+    const [userRole, setUserRole] = useState<string | null>(null); // State to store user role
+
+    async function handleDelete(record: any) {
+        console.log('record', record)
+        let res: any = await del(record);
+        if (res['code'] === '00000') {
+            getList()
+            message.info("del success")
+        }
+    }
 
     // Table columns configuration
     const columns = [
@@ -29,12 +39,24 @@ const StudentManagement: React.FC = () => {
         {title: 'Email', dataIndex: 'Email', key: 'Email'},
         {title: 'PasswordHash', dataIndex: 'PasswordHash', key: 'PasswordHash'},
         {title: 'Gender', dataIndex: 'Gender', key: 'Gender', render: (gender: string) => (gender === 'A' ? 'Female' : (gender === 'B' ? 'Male' : 'Unknown'))},
-        // Other columns...
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (_text: any, record: any) => (
+                // Render delete button only if user is admin
+                userRole === 'admin' && <Button type="primary" onClick={() => handleDelete(record)}>Delete</Button>
+            ),
+        }// Other columns...
     ];
 
 
     useEffect(() => {
         getList()
+
+        const role = localStorage.getItem("UserRole");
+        console.log('role', role)
+        setUserRole(role);
     }, []);
 
     const getList = async () => {
