@@ -20,10 +20,9 @@ const initialCustomStyle: CSSProperties = {
 
 // Setting menu
 const menuItems = [
-    {key: 'Home', item: IndexContaniner, menuName: 'Home', show: false},
+    {key: 'Home', item: IndexContaniner, menuName: 'Home', show: true},
     {key: 'StudentManage', item: StudentManagement, menuName: 'StudentManage', show: false},
     {key: 'DocumentManage', item: DocumentManage, menuName: 'DocumentManage', show: false},
-    // {key: 'MenuManage', item: MenuManage, menuName: 'MenuManage', show: false}
 ];
 
 const HomePage = () => {
@@ -34,32 +33,50 @@ const HomePage = () => {
 
     const [menuItemsList, setMenuItemsList] = useState([...menuItems])
 
+
+    const [userRole, setUserRole] = useState<string | null>(null); // State to store user role
+
+
     const handleItemClick = (key: string) => {
+
         setCurrentPage(key);
     };
 
-    const handleLogout = () => {
-        // Implement logout logic here
-        console.log("User logged out");
-    };
+    useEffect(() => {
+        const role = localStorage.getItem("UserRole");
+
+        menuItemsList.forEach(item => {
+            if (!item.show) {
+                if (role === 'admin' || role == 'teacher') {
+                    item.show = true;
+                }
+            }
+        })
+        setMenuItemsList(menuItemsList)
+        console.log('role', role)
+        setUserRole(role);
+    }, []);
+
 
     return (
         <div>
             <div style={{display: 'inline-block', width: '90%'}}>
                 <Menu mode="horizontal" theme="dark">
                     {menuItemsList.map((page) => (
+                        page.show &&
                         <Menu.Item onClick={() => handleItemClick(page.key)} key={page.key} icon={<UserOutlined/>}>
                             {page.menuName}
                         </Menu.Item>
                     ))}
+
                 </Menu>
             </div>
             <div style={{display: 'inline-block', width: '10%', lineHeight: '56px'}}>
-                <ul  style={{height: '46px'}}
+                <ul style={{height: '46px'}}
                     className={'ul-menu ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark css-dev-only-do-not-override-djtmh8'}>
-                    <Button onClick={()=>{
+                    <Button onClick={() => {
                         navigate("/login")
-                    }} type={'primary'} style={{marginTop: '8px',backgroundColor:'#001529'}}>logout</Button>
+                    }} type={'primary'} style={{marginTop: '8px', backgroundColor: '#001529'}}>logout</Button>
                 </ul>
             </div>
             {menuItemsList.map((page) => (

@@ -130,104 +130,110 @@ const StudentManagement: React.FC = () => {
     };
 
     return (
-        <div style={{padding: '20px', textAlign: 'center'}}>
-            <Button type="primary" onClick={showModal} style={{marginBottom: '20px', marginRight: '10px'}}>Add
-                Student</Button>
-            <Upload accept=".xlsx, .xls" beforeUpload={(file) => {
-                handleExcelUpload(file);
-                return false;
-            }}>
-                <Button style={{marginRight: '10px'}} icon={<UploadOutlined/>}>Click to Upload xlsx/xls</Button>
-            </Upload>
+        <>
+            {(userRole == 'admin' || userRole === 'teacher') &&
+                <div style={{padding: '20px', textAlign: 'center'}}>
+                    <Button type="primary" onClick={showModal} style={{marginBottom: '20px', marginRight: '10px'}}>Add
+                        Student</Button>
+
+                    <Upload accept=".xlsx, .xls" beforeUpload={(file) => {
+                        handleExcelUpload(file);
+                        return false;
+                    }}>
+
+                        <Button style={{marginRight: '10px'}} icon={<UploadOutlined/>}>Click to Upload xlsx/xls</Button>
+
+                    </Upload>
+
+                    <Modal
+                        title="Add Student"
+                        visible={isModalVisible}
+                        onCancel={handleCancel}
+                        footer={null}
+                    >
+                        <Form
+                            ref={formRef}
+                            name="basic"
+                            labelCol={{span: 6}}
+                            wrapperCol={{span: 16}}
+                            onFinish={onFinish}
+                        >
+                            <Form.Item
+                                label="FullName"
+                                name="FullName"
+                                rules={[{required: true, message: 'Please input student FullName!'}]}
+                            >
+                                <Input/>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Age"
+                                name="age"
+                                rules={[{required: true, message: 'Please input student age!'}]}
+                            >
+                                <Input/>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Grade"
+                                name="Grade"
+                                rules={[{required: true, message: 'Please input student grade!'}]}
+                            >
+                                <Input/>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Email"
+                                name="Email"
+                                rules={[{required: true, message: 'Please input student email!'}]}
+                            >
+                                <Input type="email"/>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="PasswordHash"
+                                name="PasswordHash"
+                                rules={[{required: true, message: 'Please input student PasswordHash!'}]}
+                            >
+                                <Input.Password/>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Gender"
+                                name="Gender"
+                                rules={[{required: true, message: 'Please select student gender!'}]}
+                            >
+                                <Select>
+                                    <Select.Option value="0">Female</Select.Option>
+                                    <Select.Option value="1">Male</Select.Option>
+                                    <Select.Option value="2">Unknown</Select.Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item
+                                label="Role"
+                                name="Role"
+                                rules={[{required: true, message: 'Please select Role!'}]}
+                            >
+                                <Select>
+                                    <Select.Option value="admin">admin</Select.Option>
+                                    <Select.Option value="teacher">teacher</Select.Option>
+                                    <Select.Option value="student">student</Select.Option>
+                                </Select>
+                            </Form.Item>
+
+                            <Form.Item wrapperCol={{offset: 6, span: 16}}>
+                                <Button type="primary" htmlType="submit">
+                                    Submit
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </Modal>
+                </div>}
 
             <div style={{margin: '0 auto', width: '80%'}}>
                 <Table dataSource={students} columns={columns}/>
             </div>
-
-            <Modal
-                title="Add Student"
-                visible={isModalVisible}
-                onCancel={handleCancel}
-                footer={null}
-            >
-                <Form
-                    ref={formRef}
-                    name="basic"
-                    labelCol={{span: 6}}
-                    wrapperCol={{span: 16}}
-                    onFinish={onFinish}
-                >
-                    <Form.Item
-                        label="FullName"
-                        name="FullName"
-                        rules={[{required: true, message: 'Please input student FullName!'}]}
-                    >
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Age"
-                        name="age"
-                        rules={[{required: true, message: 'Please input student age!'}]}
-                    >
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Grade"
-                        name="Grade"
-                        rules={[{required: true, message: 'Please input student grade!'}]}
-                    >
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Email"
-                        name="Email"
-                        rules={[{required: true, message: 'Please input student email!'}]}
-                    >
-                        <Input type="email"/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="PasswordHash"
-                        name="PasswordHash"
-                        rules={[{required: true, message: 'Please input student PasswordHash!'}]}
-                    >
-                        <Input.Password/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Gender"
-                        name="Gender"
-                        rules={[{required: true, message: 'Please select student gender!'}]}
-                    >
-                        <Select>
-                            <Select.Option value="0">Female</Select.Option>
-                            <Select.Option value="1">Male</Select.Option>
-                            <Select.Option value="2">Unknown</Select.Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item
-                        label="Role"
-                        name="Role"
-                        rules={[{required: true, message: 'Please select Role!'}]}
-                    >
-                        <Select>
-                            <Select.Option value="admin">admin</Select.Option>
-                            <Select.Option value="teacher">teacher</Select.Option>
-                            <Select.Option value="student">student</Select.Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item wrapperCol={{offset: 6, span: 16}}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
-        </div>
+        </>
     );
 };
 

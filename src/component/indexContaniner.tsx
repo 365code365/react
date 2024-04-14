@@ -1,9 +1,9 @@
-import {Button, Card, message, Modal, Popover, Form, Input, DatePicker} from "antd";
-import {useEffect, useState} from "react";
-import {create, del, listAll} from "../api/cert/cert";
+import { Button, Card, message, Modal, Popover, Form, Input, DatePicker } from "antd";
+import { useEffect, useState } from "react";
+import { create, del, listAll } from "../api/cert/cert";
 import CreateCertForm from "./CreateCertForm";
 import HTMLPreview from "./HTMLPreview";
-import {createApply} from "../api/cert/courseCertClaim";
+import { createApply, getDetail } from "../api/cert/courseCertClaim";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -13,6 +13,8 @@ export const IndexContaniner = (props: any) => {
     const [applyForm] = Form.useForm();
     const [selectedCourseID, setSelectedCourseID] = useState<string | null>(null); // State to store selected course ID
     const [userID, setUserID] = useState<string | null>(null); // State to store selected course ID
+    const [detailModalVisible, setDetailModalVisible] = useState(false);
+    const [selectedApply, setSelectedApply] = useState<any>(null);
 
     useEffect(() => {
         getListAll();
@@ -64,6 +66,29 @@ export const IndexContaniner = (props: any) => {
         }
     };
 
+    const handleShowMyApply = async (apply: any) => {
+
+        let param = {
+            CourseAndCertificationID: apply.ID,
+            UserID: userID
+        }
+        let res: any = await getDetail(param)
+        if (res['code'] === '00000' && res['data']) {
+
+            let resData = {
+                TotalAmountSpent: res.data.TotalAmountSpent,
+                TotalClaimAmount: res.data.TotalClaimAmount,
+                Remark: res.data.Remark,
+                ExaminationDate: res.data.ExaminationDate,
+            }
+            setSelectedApply(resData);
+            setDetailModalVisible(true);
+        } else {
+            message.warning("apply is empty")
+        }
+
+    };
+
     return (
         <div>
             <div>
@@ -72,7 +97,7 @@ export const IndexContaniner = (props: any) => {
                         onClick={() => {
                             setIsModalOpen(true);
                         }}
-                        style={{marginLeft: "10px", marginTop: "10px"}}
+                        style={{ marginLeft: "10px", marginTop: "10px" }}
                         type={"primary"}
                     >
                         Create Certificate
@@ -100,10 +125,10 @@ export const IndexContaniner = (props: any) => {
                             position: "relative",
                         }}
                         cover={<img alt="Applying" src={item["CourseImage"]}
-                                    style={{height: 300, objectFit: "cover"}}/>}
+                                    style={{ height: 300, objectFit: "cover" }} />}
                     >
-                        <Card.Meta title={<strong>{item["TitleOfCertification"]}</strong>}/>
-                        <div style={{marginBottom: "10px", marginTop: "15px"}}>
+                        <Card.Meta title={<strong>{item["TitleOfCertification"]}</strong>} />
+                        <div style={{ marginBottom: "10px", marginTop: "15px" }}>
                             <Popover
                                 placement="top"
                                 trigger="click"
@@ -116,7 +141,7 @@ export const IndexContaniner = (props: any) => {
                                             overflowY: "auto",
                                         }}
                                     >
-                                        <HTMLPreview htmlContent={item["CourseDesc"]}/>
+                                        <HTMLPreview htmlContent={item["CourseDesc"]} />
                                     </div>
                                 }
                             >
@@ -125,7 +150,9 @@ export const IndexContaniner = (props: any) => {
                         </div>
                         {userRole === "student" && (
                             <>
-                                <Button type="primary" style={{marginRight: "10px"}}>
+                                <Button type="primary" onClick={() => {
+                                    handleShowMyApply(item)
+                                }} style={{ marginRight: "10px" }}>
                                     Show My Apply
                                 </Button>
                                 <Button type="primary" onClick={() => handleApplyCert(item)}>Apply Cert</Button>
@@ -133,7 +160,7 @@ export const IndexContaniner = (props: any) => {
                         )}
                         {userRole === "admin" && (
                             <Button
-                                style={{position: "absolute", top: 0, right: 0}}
+                                style={{ position: "absolute", top: 0, right: 0 }}
                                 onClick={() => handleDelete(item)}
                                 type={"primary"}
                             >
@@ -170,36 +197,51 @@ export const IndexContaniner = (props: any) => {
                         form={applyForm}
                         onFinish={handleApplySubmit}
                         layout="vertical"
-                        initialValues={{CourseAndCertificationID: selectedCourseID}} // Set initial value for CourseAndCertificationID
+                        initialValues={{ CourseAndCertificationID: selectedCourseID }} // Set initial value for CourseAndCertificationID
                     >
                         <Form.Item
                             name="TotalClaimAmount"
                             label="Total Claim Amount"
-                            rules={[{required: true, message: 'Please enter total claim amount'}]}
+                            rules={[{ required: true, message: 'Please enter total claim amount' }]}
                         >
-                            <Input/>
+                            <Input />
                         </Form.Item>
                         <Form.Item
                             name="TotalAmountSpent"
                             label="Total Amount Spent"
-                            rules={[{required: true, message: 'Please enter total amount spent'}]}
+                            rules={[{ required: true, message: 'Please enter total amount spent' }]}
                         >
-                            <Input/>
+                            <Input />
                         </Form.Item>
                         <Form.Item
                             name="ExaminationDate"
                             label="Examination Date"
-                            rules={[{required: true, message: 'Please select examination date'}]}
+                            rules={[{ required: true, message: 'Please select examination date' }]}
                         >
-                            <DatePicker style={{width: "100%"}}  format="YYYY-MM-DD"/>
+                            <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
                         </Form.Item>
                         <Form.Item
                             name="Remark"
                             label="Remark"
                         >
-                            <Input.TextArea/>
+                            <Input.TextArea />
                         </Form.Item>
                     </Form>
+                </Modal>
+                <Modal
+                    title="Apply Details"
+                    visible={detailModalVisible}
+                    onCancel={() => setDetailModalVisible(false)}
+                    footer={null}
+                >
+                    {selectedApply && (
+                        <div style={{ padding: "20px" }}>
+                            <p><strong>Total Claim Amount:</strong> {selectedApply.TotalClaimAmount}</p>
+                            <p><strong>Total Amount Spent:</strong> {selectedApply.TotalAmountSpent}</p>
+                            <p><strong>Examination Date:</strong> {selectedApply.ExaminationDate}</p>
+                            <p><strong>Remark:</strong> {selectedApply.Remark}</p>
+                        </div>
+                    )}
                 </Modal>
             </div>
         </div>

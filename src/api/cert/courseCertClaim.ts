@@ -8,7 +8,7 @@ export const updateCertClaim = async <T>(data?: object): Promise<T> => {
     return post("/courseCertClaim/updateCertClaim", data)
 }
 
-export const getListByUserId = async <T>(data?: object): Promise<T> => {
-    return get("/courseCertClaim/getListByUserId", data)
+export const getDetail = async <T>(data?: object): Promise<T> => {
+    return get("/courseCertClaim/getDetail", data)
 }
 
