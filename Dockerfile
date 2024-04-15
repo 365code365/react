@@ -1,30 +1,30 @@
-# 阶段一：使用Node镜像构建React应用
+# Stage one: Use Node image to build the React application
 FROM node:18 AS builder
 
-# 设置工作目录
+# Set the working directory
 WORKDIR /usr/src/app
 
-# 从GitHub拉取React应用代码
+# Clone React application code from GitHub
 RUN git clone https://github.com/365code365/react-plat.git .
 
+# Install npm globally and dependencies
 RUN npm install -g npm@10.5.2
 RUN npm i --save-dev @types/jest --legacy-peer-deps
-# 安装依赖
 RUN npm install --legacy-peer-deps
 
-# 构建React应用
+# Build the React application
 RUN npm run build
 
-# 阶段二：使用Nginx镜像将构建好的静态文件部署到Nginx中
+# Stage two: Use Nginx image to deploy built static files to Nginx
 FROM nginx:latest
 
-# 将第一阶段中构建好的静态文件复制到Nginx的默认静态文件目录中
+# Copy the built static files from the first stage to Nginx's default static file directory
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 
-# 如果需要，可以添加自定义的Nginx配置文件
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Copy the Nginx configuration file from the config folder to the Nginx image
+COPY config/nginx.conf /etc/nginx/nginx.conf
 
-# 暴露Nginx的80端口
+# Expose Nginx's port 80
 EXPOSE 80
 
-# Nginx镜像默认会自动启动Nginx，所以无需CMD或ENTRYPOINT命令
+# Nginx image automatically starts Nginx, so no CMD or ENTRYPOINT command is required
