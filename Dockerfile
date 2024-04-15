@@ -1,30 +1,34 @@
-# Stage one: Use Node image to build the React application
+# 第一阶段：构建React应用
 FROM node:18 AS builder
 
-# Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Clone React application code from GitHub
+# 设置时区
+ENV TZ="Asia/Shanghai"
+
+# 更新软件包索引并安装git
+RUN apt-get update && apt-get install -y git
+
+# 克隆GitHub项目
 RUN git clone https://github.com/365code365/react-plat.git .
 
-# Install npm globally and dependencies
-RUN npm install -g npm@10.5.2
-RUN npm i --save-dev @types/jest --legacy-peer-deps
-RUN npm install --legacy-peer-deps
+# 安装依赖项
+RUN npm install -g npm@10.5.2 && \
+    npm i --save-dev @types/jest --legacy-peer-deps && \
+    npm install --legacy-peer-deps && \
+    npm run build
 
-# Build the React application
-RUN npm run build
-
-# Stage two: Use Nginx image to deploy built static files to Nginx
+# 第二阶段：构建Nginx服务器
 FROM nginx:latest
 
-# Copy the built static files from the first stage to Nginx's default static file directory
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+# 复制构建后的React应用到Nginx默认服务目录
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy the Nginx configuration file from the config folder to the Nginx image
+# 复制自定义的Nginx配置文件到容器中
 COPY config/nginx.conf /etc/nginx/nginx.conf
 
-# Expose Nginx's port 80
+# 暴露端口
 EXPOSE 80
 
-# Nginx image automatically starts Nginx, so no CMD or ENTRYPOINT command is required
+# 启动Nginx
+CMD ["nginx", "-g", "daemon off;"]
