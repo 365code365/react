@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {create, del, listAll} from "../api/cert/cert";
 import CreateCertForm from "./CreateCertForm";
 import HTMLPreview from "./HTMLPreview";
-import {createApply, getDetail, updateCertClaim} from "../api/cert/courseCertClaim";
+import {createApply, getDetail, getListById, updateCertClaim} from "../api/cert/courseCertClaim";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -16,9 +16,11 @@ export const IndexContaniner = (props: any) => {
     const [userID, setUserID] = useState<string | null>(null); // State to store selected course ID
     const [detailModalVisible, setDetailModalVisible] = useState(false);
     const [selectedApply, setSelectedApply] = useState<any>(null);
+    const [applyListOptions, setApplyListOptions] = useState<any>([]);
 
     useEffect(() => {
         getListAll();
+        getApplyListAll();
         const role = localStorage.getItem("UserRole");
         setUserRole(role);
         setUserID(localStorage.getItem("UserID"))
@@ -27,6 +29,12 @@ export const IndexContaniner = (props: any) => {
     const getListAll = async () => {
         let res: any = await listAll();
         setCardInfoList(res["data"]);
+    };
+
+    const getApplyListAll = async () => {
+        let res: any = await getListById();
+        setApplyListOptions(res["data"])
+
     };
 
     const handleDelete = async (item: any) => {
@@ -272,6 +280,20 @@ export const IndexContaniner = (props: any) => {
                         initialValues={{CourseAndCertificationID: selectedCourseID}} // Set initial value for CourseAndCertificationID
                     >
 
+                        <Form.Item
+                            name="UserID"
+                            label="UserID"
+                            rules={[{required: true, message: 'Please enter total amount spent'}]}
+                        >
+                            <Select
+                                defaultValue="Select an student"
+                                style={{minWidth: '200px'}}
+                                placeholder="Tags Mode"
+                                onChange={(e) => {
+                                    handleChange(e)
+                                }}
+                                options={applyListOptions}/>
+                        </Form.Item>
                         <Form.Item
                             name="Status"
                             label="Status"

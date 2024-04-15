@@ -12,3 +12,8 @@ export const getDetail = async <T>(data?: object): Promise<T> => {
     return get("/courseCertClaim/getDetail", data)
 }
 
+
+export const getListById = async <T>(data?: object): Promise<T> => {
+    return get("/courseCertClaim/getListById", data)
+}
+
