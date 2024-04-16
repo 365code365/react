@@ -7,6 +7,7 @@ const {Step} = Steps;
 interface StepData {
     title: string;
     description: string;
+    status?: "wait" | "process" | "finish" | "error"; // Added status type
 }
 
 interface ApprovePageProps {
@@ -29,22 +30,37 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
 
         let data = res['data'];
 
-        let arr = [
-            {title: 'Submit', description: 'Submit'},
-            {title: 'Pending', description: 'Pending'},
-            {title: 'Reject', description: 'Reject'},
-            {title: 'Finish', description: 'Finish'}]
-
         if (data) {
-            let status = data.Status
-            if (status === 'Reject') {
-                arr = arr.filter(item => item.title !== 'Finish');
+            let status = data.Status;
+
+            let arr: StepData[] = [
+                {title: 'Submit', description: 'Submit', status: 'finish'}, // Set initial status for the first step
+                {title: 'Pending', description: 'Pending', status: 'wait'}, // Set initial status for the second step
+                {title: 'Reject', description: 'Reject', status: 'wait'}, // Set initial status for the third step
+                {title: 'Finish', description: 'Finish', status: 'wait'} // Set initial status for the fourth step
+            ];
+
+            switch (status) {
+                case 'Reject':
+                    arr[1].status = 'finish'; // Change status for the "Reject" step
+                    arr[2].status = 'error'; // Change status for the "Reject" step
+                    arr = arr.filter(item => item.title !== 'Finish');
+                    break;
+                case 'Pending':
+                    arr[1].status = 'finish'; // Change status for the "Finish" step
+                    arr[3].status = 'wait'; // Change status for the "Finish" step
+                    arr = arr.filter(item => item.title !== 'Reject');
+                    break;
+                case 'Finish':
+                    arr[1].status = 'finish'; // Change status for the "Finish" step
+                    arr[3].status = 'finish'; // Change status for the "Finish" step
+                    arr = arr.filter(item => item.title !== 'Reject');
+                    break;
+                default:
+                    break;
             }
 
-            if (status === 'Finish') {
-                arr = arr.filter(item => item.title !== 'Reject');
-            }
-            setRemark(data.Remark)
+            setRemark(data.Remark);
             setStepsData(arr);
         }
     }
@@ -52,7 +68,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
     async function showProcess() {
         setShowProgressBar(true);
         setShowModal(true);
-        getProcess()
+        getProcess();
     }
 
     const handleModalCancel = () => {
@@ -62,7 +78,8 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
     return (
         <>
             <div>
-                <Button size={'middle'} onClick={showProcess} style={{marginTop: '10px'}} type={'primary'}>Show my process</Button>
+                <Button size={'middle'} onClick={showProcess} style={{marginTop: '10px'}} type={'primary'}>Show my
+                    process</Button>
             </div>
             <Modal
                 title="My Process"
@@ -72,9 +89,11 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
             >
                 {showProgressBar && (
                     <div style={{marginTop: '20px'}}>
-                        <Steps current={stepsData.length}>
+                        <Steps
+                            current={stepsData.findIndex(step => step.status === 'process' || step.status === 'finish')}>
                             {stepsData.map((step, index) => (
-                                <Step key={index} title={step.title} description={step.description}/>
+                                <Step key={index} title={step.title} description={step.description}
+                                      status={step.status}/>
                             ))}
                         </Steps>
                     </div>
