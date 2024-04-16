@@ -6,23 +6,20 @@ import HTMLPreview from "./HTMLPreview";
 import {createApply, getDetail, getListById, updateCertClaim} from "../api/cert/courseCertClaim";
 import ApprovePage from "./ApprovePage";
 import {UNSAFE_useRouteId} from "react-router-dom";
+import ApplyCertPage from "./ApplyCertPage";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userRole, setUserRole] = useState<string | null>(null);
-    const [applyModalVisible, setApplyModalVisible] = useState(false);
-    const [approveModalVisible, setApproveModalVisible] = useState(false);
-    const [applyForm] = Form.useForm();
+
     const [selectedCourseID, setSelectedCourseID] = useState<string | null>(null); // State to store selected course ID
     const [userID, setUserID] = useState<string | null>(null); // State to store selected course ID
     const [detailModalVisible, setDetailModalVisible] = useState(false);
     const [selectedApply, setSelectedApply] = useState<any>(null);
-    const [applyListOptions, setApplyListOptions] = useState<any>([]);
 
     useEffect(() => {
         getListAll();
-        getApplyListAll();
         const role = localStorage.getItem("UserRole");
         setUserRole(role);
         setUserID(localStorage.getItem("UserID"))
@@ -33,11 +30,6 @@ export const IndexContaniner = (props: any) => {
         setCardInfoList(res["data"]);
     };
 
-    const getApplyListAll = async () => {
-        let res: any = await getListById();
-        setApplyListOptions(res["data"])
-
-    };
 
     const handleDelete = async (item: any) => {
         console.log("Deleting item with item:", item);
@@ -48,34 +40,6 @@ export const IndexContaniner = (props: any) => {
         }
     };
 
-    const handleApplyCert = (item: any) => {
-        setSelectedCourseID(item.ID); // Set selected course ID
-        setApplyModalVisible(true);
-    };
-
-    const handleApplyCancel = () => {
-        setApplyModalVisible(false);
-    };
-
-    const handleApplySubmit = async (values: any) => {
-        try {
-            // Set CourseAndCertificationID in form values
-            values.ExaminationDate = new Date(values.ExaminationDate);
-            values.CourseAndCertificationID = selectedCourseID;
-            values.UserID = userID
-            console.log("Submitted apply cert values:", values);
-            let res: any = await createApply(values);
-            if (res['code'] === '00000') {
-                setApplyModalVisible(false);
-                message.info("apply success")
-            }
-
-            message.success('Apply Cert submitted successfully!');
-        } catch (error) {
-            console.error("Error submitting apply cert:", error);
-            message.error('Failed to submit apply cert');
-        }
-    };
 
     const handleShowMyApply = async (apply: any) => {
 
@@ -100,31 +64,10 @@ export const IndexContaniner = (props: any) => {
 
     };
 
-    function handleApproval(item: any) {
-        setSelectedCourseID(item.ID); // Set selected course ID
-        setApproveModalVisible(true);
-    }
-
-    async function handleApprovalSubmit(values: any) {
-        let data = {
-            CourseAndCertificationID: selectedCourseID,
-            ...values
-        }
-        console.log('values', data)
-        let res: any = await updateCertClaim(data)
-        if (res['code'] === '00000') {
-            message.info('submit success')
-            setApproveModalVisible(false)
-        }
-    }
-
-    function handleChange(e: any) {
-
-    }
 
     function getUserId() {
         let value = localStorage.getItem("UserID");
-        return value?value:'';
+        return value ? value : '';
     }
 
     return (
@@ -151,7 +94,7 @@ export const IndexContaniner = (props: any) => {
                     padding: "10px",
                 }}
             >
-                {cardInfoList.map((item:any) => (
+                {cardInfoList.map((item: any) => (
                     <Card
                         key={item['id']}
                         style={{
@@ -193,12 +136,12 @@ export const IndexContaniner = (props: any) => {
                                 }} style={{marginRight: "10px"}}>
                                     Show My Apply
                                 </Button>
-                                <Button type="primary" onClick={() => handleApplyCert(item)}>Apply Cert</Button>
-                                <ApprovePage UserId={getUserId()}  CourseAndCertificationID={item.ID} />
+                                <ApplyCertPage selectedCourseID={item.ID}/>
+                                <ApprovePage UserId={getUserId()} CourseAndCertificationID={item.ID}/>
                             </>
                         )} {userRole === "teacher" && (
                         <>
-                            <Button type="primary" onClick={() => handleApproval(item)}>Approval Process</Button>
+
                         </>
                     )}
                         {userRole === "admin" && (
@@ -229,106 +172,7 @@ export const IndexContaniner = (props: any) => {
                     key={"11"}
                     visible={isModalOpen}
                 />
-                <Modal
-                    title="Apply Certificate"
-                    visible={applyModalVisible}
-                    onCancel={handleApplyCancel}
-                    onOk={() => applyForm.submit()}
-                    okText="Submit"
-                >
-                    <Form
-                        form={applyForm}
-                        onFinish={handleApplySubmit}
-                        layout="vertical"
-                        initialValues={{CourseAndCertificationID: selectedCourseID}} // Set initial value for CourseAndCertificationID
-                    >
-                        <Form.Item
-                            name="TotalClaimAmount"
-                            label="Total Claim Amount"
-                            rules={[{required: true, message: 'Please enter total claim amount'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-                        <Form.Item
-                            name="TotalAmountSpent"
-                            label="Total Amount Spent"
-                            rules={[{required: true, message: 'Please enter total amount spent'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-                        <Form.Item
-                            name="ExaminationDate"
-                            label="Examination Date"
-                            rules={[{required: true, message: 'Please select examination date'}]}
-                        >
-                            <DatePicker style={{width: "100%"}} format="YYYY-MM-DD"/>
-                        </Form.Item>
-                        <Form.Item
-                            name="Remark"
-                            label="Remark"
-                        >
-                            <Input.TextArea/>
-                        </Form.Item>
-                    </Form>
-                </Modal>
 
-                <Modal
-                    title="Approval Process"
-                    visible={approveModalVisible}
-                    onCancel={() => {
-                        setApproveModalVisible(false)
-                    }}
-                    onOk={() => applyForm.submit()}
-                    okText="Submit"
-                >
-                    <Form
-                        form={applyForm}
-                        onFinish={handleApprovalSubmit}
-                        layout="vertical"
-                        initialValues={{CourseAndCertificationID: selectedCourseID}} // Set initial value for CourseAndCertificationID
-                    >
-
-                        <Form.Item
-                            name="UserID"
-                            label="UserID"
-                            rules={[{required: true, message: 'Please enter total amount spent'}]}
-                        >
-                            <Select
-                                defaultValue="Select an student"
-                                style={{minWidth: '200px'}}
-                                placeholder="Tags Mode"
-                                onChange={(e) => {
-                                    handleChange(e)
-                                }}
-                                options={applyListOptions}/>
-                        </Form.Item>
-                        <Form.Item
-                            name="Status"
-                            label="Status"
-                            rules={[{required: true, message: 'Please enter total amount spent'}]}
-                        >
-                            <Select
-                                defaultValue="Select an option"
-                                style={{minWidth: '200px'}}
-                                placeholder="Tags Mode"
-                                onChange={(e) => {
-                                    handleChange(e)
-                                }}
-                                options={[
-                                    {label: 'Submit', value: 'Submit'},
-                                    {label: 'Pending', value: 'Pending'},
-                                    {label: 'Reject', value: 'Reject'},
-                                    {label: 'Finish', value: 'Finish'}
-                                ]}/>
-                        </Form.Item>
-                        <Form.Item
-                            name="Remark"
-                            label="Remark"
-                        >
-                            <Input.TextArea/>
-                        </Form.Item>
-                    </Form>
-                </Modal>
 
                 <Modal
                     title="Apply Details"
