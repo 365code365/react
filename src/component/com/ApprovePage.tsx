@@ -77,10 +77,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
 
     return (
         <>
-            <div>
-                <Button size={'middle'} onClick={showProcess} style={{marginTop: '10px'}} type={'primary'}>Show my
-                    process</Button>
-            </div>
+            <Button style={{marginLeft: '10px'}} size={'middle'} onClick={showProcess} type={'primary'}>Process</Button>
             <Modal
                 title="My Process"
                 visible={showModal}

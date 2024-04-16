@@ -55,7 +55,7 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
 
 
     return (<>
-        <Button type={'primary'} onClick={() => setApplyModalVisible(true)}>Apply Cert</Button>
+        <Button type={'primary'} onClick={() => setApplyModalVisible(true)}>Apply</Button>
         <Modal
             title="Apply Certificate"
             visible={applyModalVisible}

@@ -14,6 +14,6 @@ export const getDetail = async <T>(data?: object): Promise<T> => {
 
 
 export const getListById = async <T>(data?: object): Promise<T> => {
-    return get("/courseCertClaim/getListById", data)
+    return post("/courseCertClaim/getListById", data)
 }
 

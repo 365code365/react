@@ -3,7 +3,7 @@ import {Button, Form, Input, message, Modal, Select} from "antd";
 import {getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
 
 interface ProcessPageProps {
-    selectedCourseID: string
+    CourseAndCertificationID: string
 }
 
 const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
@@ -13,19 +13,21 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
 
     const [applyListOptions, setApplyListOptions] = useState<any>([]);
 
-    useEffect(() => {
-        getApplyListAll();
-    }, []);
 
     const getApplyListAll = async () => {
-        let res: any = await getListById();
+
+        let param = {
+            CourseAndCertificationID: props.CourseAndCertificationID
+        }
+
+        let res: any = await getListById(param);
         setApplyListOptions(res["data"])
 
     };
 
     async function handleApprovalSubmit(values: any) {
         let data = {
-            CourseAndCertificationID: props.selectedCourseID,
+            CourseAndCertificationID: props.CourseAndCertificationID,
             ...values
         }
         console.log('values', data)
@@ -41,11 +43,14 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
 
     }
 
-    function handleApproval(item: any) {
+    function handleApproval() {
         setApproveModalVisible(true);
     }
 
-    return (<>   <Button type="primary" onClick={() => handleApproval(props)}>Approval Process</Button> <Modal
+    return (<>   <Button type="primary" onClick={() => {
+        getApplyListAll()
+        handleApproval()
+    }}>Process</Button> <Modal
         title="Approval Process"
         visible={approveModalVisible}
         onCancel={() => {
@@ -58,7 +63,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
             form={applyForm}
             onFinish={handleApprovalSubmit}
             layout="vertical"
-            initialValues={{CourseAndCertificationID: props.selectedCourseID}} // Set initial value for CourseAndCertificationID
+            initialValues={{CourseAndCertificationID: props.CourseAndCertificationID}} // Set initial value for CourseAndCertificationID
         >
 
             <Form.Item

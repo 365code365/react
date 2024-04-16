@@ -1,12 +1,12 @@
-import {Button, Card, message, Modal, Popover, Form, Input, DatePicker, Select} from "antd";
+import {Button, Card, message, Modal, Popover} from "antd";
 import {useEffect, useState} from "react";
 import {create, del, listAll} from "../api/cert/cert";
 import CreateCertForm from "./CreateCertForm";
 import HTMLPreview from "./HTMLPreview";
-import {createApply, getDetail, getListById, updateCertClaim} from "../api/cert/courseCertClaim";
+import { getDetail} from "../api/cert/courseCertClaim";
 import ApprovePage from "./com/ApprovePage";
-import {UNSAFE_useRouteId} from "react-router-dom";
 import ApplyCertPage from "./com/ApplyCertPage";
+import ProcessPage from "./com/ProcessPage";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -106,7 +106,7 @@ export const IndexContaniner = (props: any) => {
                             position: "relative",
                         }}
                         cover={<img alt="Applying" src={item["CourseImage"]}
-                                    style={{height: 300, objectFit: "cover"}}/>}
+                                    style={{height: 400, objectFit: "cover"}}/>}
                     >
                         <Card.Meta title={<strong>{item["TitleOfCertification"]}</strong>}/>
                         <div style={{marginBottom: "10px", marginTop: "15px"}}>
@@ -131,17 +131,17 @@ export const IndexContaniner = (props: any) => {
                         </div>
                         {userRole === "student" && (
                             <>
-                                <Button type="primary" onClick={() => {
+                                <div style={{display:"flex"}}><Button type="primary" onClick={() => {
                                     handleShowMyApply(item)
                                 }} style={{marginRight: "10px"}}>
-                                    Show My Apply
+                                    My Apply
                                 </Button>
-                                <ApplyCertPage selectedCourseID={item.ID}/>
-                                <ApprovePage UserId={getUserId()} CourseAndCertificationID={item.ID}/>
+                                    <ApplyCertPage selectedCourseID={item.ID}/>
+                                    <ApprovePage UserId={getUserId()} CourseAndCertificationID={item.ID}/></div>
                             </>
                         )} {userRole === "teacher" && (
                         <>
-
+                           <ProcessPage CourseAndCertificationID={item.ID}/>
                         </>
                     )}
                         {userRole === "admin" && (
