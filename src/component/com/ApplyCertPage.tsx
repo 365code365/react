@@ -8,13 +8,18 @@ interface ApplyCertPageProps {
 
 const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) => {
     const [applyModalVisible, setApplyModalVisible] = useState(false);
+    const [additionalInfoModalVisible, setAdditionalInfoModalVisible] = useState(false);
     const [applyForm] = Form.useForm();
+    const [additionalInfoForm] = Form.useForm();
 
 
     const handleApplyCancel = () => {
         setApplyModalVisible(false);
     };
 
+    const handleAdditionalInfoCancel = () => {
+        setAdditionalInfoModalVisible(false);
+    };
 
     const handleApplySubmit = async (values: any) => {
         try {
@@ -33,6 +38,18 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
         } catch (error) {
             console.error("Error submitting apply cert:", error);
             message.error('Failed to submit apply cert');
+        }
+    };
+
+    const handleAdditionalInfoSubmit = async (values: any) => {
+        try {
+            // Handle additional info submission
+            console.log("Additional info:", values);
+            // You can handle the submission of additional info here
+            setAdditionalInfoModalVisible(false);
+        } catch (error) {
+            console.error("Error submitting additional info:", error);
+            message.error('Failed to submit additional info');
         }
     };
 
@@ -74,9 +91,46 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
                     <DatePicker style={{width: "100%"}} format="YYYY-MM-DD"/>
                 </Form.Item>
             </Form>
-        </Modal></>)
+            <Button type={'default'} onClick={() => setAdditionalInfoModalVisible(true)}>Additional Info</Button>
+            <Modal
+                title="Additional Information"
+                visible={additionalInfoModalVisible}
+                onCancel={handleAdditionalInfoCancel}
+                onOk={() => additionalInfoForm.submit()}
+                okText="Submit"
+            >
+                <Form
+                    form={additionalInfoForm}
+                    onFinish={handleAdditionalInfoSubmit}
+                    layout="vertical"
+                >
+                    <Form.Item
+                        name="Title"
+                        label="Title"
+                        rules={[{required: true, message: 'Please enter a title'}]}
+                    >
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item
+                        name="Description"
+                        label="Description"
+                        rules={[{required: true, message: 'Please enter a description'}]}
+                    >
+                        <Input.TextArea/>
+                    </Form.Item>
+                    <Form.Item
+                        name="RejectionReason"
+                        label="Rejection Reason"
+                        rules={[{required: true, message: 'Please enter a rejection reason'}]}
+                    >
+                        <Input.TextArea/>
+                    </Form.Item>
+                </Form>
+            </Modal>
+        </Modal>
+    </>)
 
 }
 
 
-export default ApplyCertPage
+export default ApplyCertPage;
