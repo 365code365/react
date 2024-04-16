@@ -38,7 +38,7 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
 
 
     return (<>
-        <Button type={'primary'} onClick={()=>setApplyModalVisible(true)}>Apply Cert</Button>
+        <Button type={'primary'} onClick={() => setApplyModalVisible(true)}>Apply Cert</Button>
         <Modal
             title="Apply Certificate"
             visible={applyModalVisible}
@@ -72,12 +72,6 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
                     rules={[{required: true, message: 'Please select examination date'}]}
                 >
                     <DatePicker style={{width: "100%"}} format="YYYY-MM-DD"/>
-                </Form.Item>
-                <Form.Item
-                    name="Remark"
-                    label="Remark"
-                >
-                    <Input.TextArea/>
                 </Form.Item>
             </Form>
         </Modal></>)
