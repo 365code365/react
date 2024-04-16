@@ -18,41 +18,40 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
     const [showProgressBar, setShowProgressBar] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [stepsData, setStepsData] = useState<StepData[]>([]);
+    const [currentStep, setCurrentStep] = useState<StepData[]>(0);
 
-    useEffect(() => {
-        // Fetch data and update stepsData here, you might need to adjust this according to your data structure
-        const fetchData = async () => {
-            let paramBody = {
-                UserID: props.UserId,
-                CourseAndCertificationID: props.CourseAndCertificationID
-            };
-            let res: any = await getDetail(paramBody);
-            // Assuming res contains an array of steps data
-            let status = res['status'];
-            let arr = [
-                {title: 'Submit', description: 'Submit'},
-                {title: 'Pending', description: 'Pending'},
-                {title: 'Reject', description: 'Reject'},
-                {title: 'Finish', description: 'Finish'}]
 
-           // Remove "Finish" if status is "Reject"
+    async function getProcess() {
+        let paramBody = {
+            UserID: props.UserId,
+            CourseAndCertificationID: props.CourseAndCertificationID
+        };
+        let res: any = await getDetail(paramBody);
+
+        let data = res['data'];
+        let arr = [
+            {title: 'Submit', description: 'Submit'},
+            {title: 'Pending', description: 'Pending'},
+            {title: 'Reject', description: 'Reject'},
+            {title: 'Finish', description: 'Finish'}]
+
+        if (data) {
+
             if (status === 'Reject') {
                 arr = arr.filter(item => item.title !== 'Finish');
             }
 
-            // Remove "Reject" if status is "Finish"
             if (status === 'Finish') {
                 arr = arr.filter(item => item.title !== 'Reject');
             }
             setStepsData(arr);
-        };
-
-        fetchData();
-    }, [props.UserId, props.CourseAndCertificationID]);
+        }
+    }
 
     async function showProcess() {
         setShowProgressBar(true);
         setShowModal(true);
+        getProcess()
     }
 
     const handleModalCancel = () => {
@@ -72,7 +71,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
             >
                 {showProgressBar && (
                     <div style={{marginTop: '20px'}}>
-                        <Steps current={stepsData.length - 1}>
+                        <Steps current={currentStep}>
                             {stepsData.map((step, index) => (
                                 <Step key={index} title={step.title} description={step.description}/>
                             ))}
