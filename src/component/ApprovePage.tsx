@@ -18,8 +18,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
     const [showProgressBar, setShowProgressBar] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [stepsData, setStepsData] = useState<StepData[]>([]);
-    const [currentStep, setCurrentStep] = useState<StepData[]>(0);
-
+    const [remark, setRemark] = useState("");
 
     async function getProcess() {
         let paramBody = {
@@ -29,6 +28,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
         let res: any = await getDetail(paramBody);
 
         let data = res['data'];
+
         let arr = [
             {title: 'Submit', description: 'Submit'},
             {title: 'Pending', description: 'Pending'},
@@ -36,7 +36,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
             {title: 'Finish', description: 'Finish'}]
 
         if (data) {
-
+            let status = data.Status
             if (status === 'Reject') {
                 arr = arr.filter(item => item.title !== 'Finish');
             }
@@ -44,6 +44,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
             if (status === 'Finish') {
                 arr = arr.filter(item => item.title !== 'Reject');
             }
+            setRemark(data.Remark)
             setStepsData(arr);
         }
     }
@@ -61,7 +62,8 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
     return (
         <>
             <div>
-                <Button onClick={showProcess} style={{marginTop: '10px'}} type={'primary'}>Show my process</Button>
+                <Button size={'middle'} onClick={showProcess} style={{marginTop: '10px'}} type={'primary'}>Show my process</Button>
+                {props.CourseAndCertificationID}
             </div>
             <Modal
                 title="My Process"
@@ -71,13 +73,17 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
             >
                 {showProgressBar && (
                     <div style={{marginTop: '20px'}}>
-                        <Steps current={currentStep}>
+                        <Steps current={stepsData.length}>
                             {stepsData.map((step, index) => (
                                 <Step key={index} title={step.title} description={step.description}/>
                             ))}
                         </Steps>
                     </div>
                 )}
+                <div style={{marginTop: '20px'}}>
+                    <label style={{fontWeight: 'bold'}}>Remark:</label>
+                    <div style={{marginTop: '5px'}}>{remark}</div>
+                </div>
             </Modal>
         </>
     );

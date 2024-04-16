@@ -106,7 +106,7 @@ const DocumentManage: React.FC = () => {
 
     return (
         <>
-            <Button style={{margin: '10px'}} size="large" type="primary" onClick={() => setFormVisible(true)}>Add
+            <Button style={{margin: '10px'}} size={'middle'} type="primary" onClick={() => setFormVisible(true)}>Add
                 Document</Button>
             <div style={{marginLeft: "20px"}}>
                 <Divider plain>List</Divider>
@@ -158,7 +158,7 @@ const DocumentManage: React.FC = () => {
                             <ReactQuill className="quill-input" theme="snow"/>
                         </Form.Item>
                         <Form.Item wrapperCol={{offset: 8, span: 16}}>
-                            <Button type="primary" htmlType="submit">
+                            <Button size={'middle'} type="primary" htmlType="submit">
                                 Submit
                             </Button>
                         </Form.Item>

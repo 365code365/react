@@ -117,7 +117,7 @@ const RegisterPage: React.FC = () => {
                                                 placeholder={'repeat input password'} prefix={<LockOutlined/>}/>
                             </Form.Item>
                             <Form.Item style={{textAlign: 'center'}}>
-                                <Button type="primary" htmlType="submit">
+                                <Button size={'middle'} type="primary" htmlType="submit">
                                     Register
                                 </Button>
                             </Form.Item>

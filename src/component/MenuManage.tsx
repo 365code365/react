@@ -114,7 +114,7 @@ export const MenuManage = (prop: any) => {
                 </div>
             </div>
             <div style={{marginLeft: '20px', marginTop: '20px'}}>
-                <Button type={'primary'} onClick={submitForm}>submit</Button>
+                <Button size={'middle'} type={'primary'} onClick={submitForm}>submit</Button>
             </div>
         </div>
         <Divider>menu list</Divider>
