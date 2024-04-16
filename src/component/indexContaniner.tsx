@@ -4,6 +4,8 @@ import {create, del, listAll} from "../api/cert/cert";
 import CreateCertForm from "./CreateCertForm";
 import HTMLPreview from "./HTMLPreview";
 import {createApply, getDetail, getListById, updateCertClaim} from "../api/cert/courseCertClaim";
+import ApprovePage from "./ApprovePage";
+import {UNSAFE_useRouteId} from "react-router-dom";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -120,6 +122,11 @@ export const IndexContaniner = (props: any) => {
 
     }
 
+    function getUserId() {
+        let value = localStorage.getItem("UserID");
+        return value?value:'';
+    }
+
     return (
         <div>
             <div>
@@ -144,7 +151,7 @@ export const IndexContaniner = (props: any) => {
                     padding: "10px",
                 }}
             >
-                {cardInfoList.map((item) => (
+                {cardInfoList.map((item:any) => (
                     <Card
                         key={item['id']}
                         style={{
@@ -187,6 +194,7 @@ export const IndexContaniner = (props: any) => {
                                     Show My Apply
                                 </Button>
                                 <Button type="primary" onClick={() => handleApplyCert(item)}>Apply Cert</Button>
+                                <ApprovePage UserId={getUserId()}  CourseAndCertificationID={item.ID} />
                             </>
                         )} {userRole === "teacher" && (
                         <>
@@ -307,7 +315,7 @@ export const IndexContaniner = (props: any) => {
                                     handleChange(e)
                                 }}
                                 options={[
-                                    {label: 'submit', value: 'submit'},
+                                    {label: 'Submit', value: 'Submit'},
                                     {label: 'Pending', value: 'Pending'},
                                     {label: 'Reject', value: 'Reject'},
                                     {label: 'Finish', value: 'Finish'}
