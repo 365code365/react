@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, DatePicker, Form, Input, message, Modal} from "antd";
-import {createApply} from "../api/cert/courseCertClaim";
+import {createApply} from "../../api/cert/courseCertClaim";
 
 interface ApplyCertPageProps {
     selectedCourseID: string

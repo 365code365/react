@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Button, Modal, Steps} from "antd";
-import {getDetail} from "../api/cert/courseCertClaim";
+import {getDetail} from "../../api/cert/courseCertClaim";
 
 const {Step} = Steps;
 

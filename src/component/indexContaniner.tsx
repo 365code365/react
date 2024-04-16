@@ -4,9 +4,9 @@ import {create, del, listAll} from "../api/cert/cert";
 import CreateCertForm from "./CreateCertForm";
 import HTMLPreview from "./HTMLPreview";
 import {createApply, getDetail, getListById, updateCertClaim} from "../api/cert/courseCertClaim";
-import ApprovePage from "./ApprovePage";
+import ApprovePage from "./com/ApprovePage";
 import {UNSAFE_useRouteId} from "react-router-dom";
-import ApplyCertPage from "./ApplyCertPage";
+import ApplyCertPage from "./com/ApplyCertPage";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, Modal, Select} from "antd";
-import {getListById, updateCertClaim} from "../api/cert/courseCertClaim";
+import {getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
 
 interface ProcessPageProps {
     selectedCourseID: string
