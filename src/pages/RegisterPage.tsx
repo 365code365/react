@@ -12,9 +12,10 @@ const RegisterPage: React.FC = () => {
 
     const [messageApi, contextHolder] = message.useMessage();
 
-    const [username, setUserName] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [rePassword, setRePassword] = useState('')
+    const [fullName, setFullName] = useState('')
 
 
     const onFinish = async (values: any) => {
@@ -30,7 +31,8 @@ const RegisterPage: React.FC = () => {
         }
 
         let registerForm = {
-            FullName: username,
+            Email: email,
+            FullName: fullName,
             PasswordHash: password,
             Role:'student'
         }
@@ -93,7 +95,14 @@ const RegisterPage: React.FC = () => {
                                 label="email"
                                 rules={[{required: true, message: 'Please input your email!'}]}
                             >
-                                <Input onChange={(e => setUserName(e.target.value))} placeholder={'input email'}
+                                <Input onChange={(e => setEmail(e.target.value))} placeholder={'input email'}
+                                       prefix={<UserOutlined/>}/>
+                            </Form.Item>         <Form.Item
+                                name="fullName"
+                                label="fullName"
+                                rules={[{required: true, message: 'Please input your fullName!'}]}
+                            >
+                                <Input onChange={(e => setFullName(e.target.value))} placeholder={'input email'}
                                        prefix={<UserOutlined/>}/>
                             </Form.Item>
                             <Form.Item

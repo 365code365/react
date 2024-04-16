@@ -7,7 +7,7 @@ import {login} from "../api/loginApi";
 const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState('')
-    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
     const [messageApi, contextHolder] = message.useMessage();
 
     const onFinish = (values: any) => {
@@ -27,7 +27,7 @@ const LoginPage = () => {
     const handleLoginClick = async () => {
         // navigate('/home');
         let loginForm = {
-            FullName: username,
+            Email: email,
             PasswordHash: password
         }
         let res: any = await login(loginForm)
@@ -64,10 +64,10 @@ const LoginPage = () => {
                         onFinish={onFinish}
                     >
                         <Form.Item
-                            name="username"
-                            rules={[{required: true, message: 'Please input your username!'}]}
+                            name="email"
+                            rules={[{required: true, message: 'Please input your email!'}]}
                         >
-                            <Input onChange={e => setUsername(e.target.value)} prefix={<UserOutlined/>}
+                            <Input onChange={e => setEmail(e.target.value)} prefix={<UserOutlined/>}
                                    placeholder="Username"/>
                         </Form.Item>
                         <Form.Item
