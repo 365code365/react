@@ -1,6 +1,6 @@
 import {post,get} from "../../util/api";
 
-export const create = async <T>(data?: object): Promise<T> => {
+export const createDocument = async <T>(data?: object): Promise<T> => {
     return post("/document/create", data)
 }
 

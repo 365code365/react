@@ -3,7 +3,7 @@ import {Button, Form, Input, Select, DatePicker, Table, Divider, Modal, message}
 import ReactQuill from "react-quill";
 import {getAllUser} from "../api/loginApi";
 import {FormInstance} from "antd/lib/form";
-import {create, del, list} from "../api/cert/document"; // Import custom CSS for styling
+import {createDocument, del, list} from "../api/cert/document"; // Import custom CSS for styling
 
 const documentTypes = [
     {value: "Google", label: "Google"},
@@ -63,7 +63,7 @@ const DocumentManage: React.FC = () => {
             console.log("Submitted values:", values);
             // After submission, you might want to reset the form and do other tasks
             // form.resetFields();
-            let res: any = await create(values)
+            let res: any = await createDocument(values)
             if (res['code'] === '00000') {
                 setFormVisible(false);
                 getDocumentList()
