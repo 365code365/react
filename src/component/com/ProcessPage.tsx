@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, message, Modal, Select} from "antd";
-import {getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
+import {Button, Form, Image, Input, message, Modal, Select} from "antd";
+import {getDetail, getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
 
 interface ProcessPageProps {
     CourseAndCertificationID: string
@@ -10,9 +10,11 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
     const [approveModalVisible, setApproveModalVisible] = useState(false);
     const [applyForm] = Form.useForm();
 
+    const [listInfo, setListInfo] = useState<any[]>([]); // State to store uploaded files
 
     const [applyListOptions, setApplyListOptions] = useState<any>([]);
 
+    const [selectedApply, setSelectedApply] = useState<any>(null);
 
     const getApplyListAll = async () => {
 
@@ -40,12 +42,38 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
 
 
     function handleChange(e: any) {
-
+        console.log('handleChange', handleChange)
+        getDetailInfo(e)
     }
 
     function handleApproval() {
         setApproveModalVisible(true);
     }
+
+
+    const getDetailInfo = async (value: any) => {
+
+        let param = {
+            CourseAndCertificationID: props.CourseAndCertificationID,
+            UserID: value
+        }
+        let res: any = await getDetail(param)
+        if (res['code'] === '00000' && res['data']) {
+
+            let resData = {
+                TotalAmountSpent: res.data.TotalAmountSpent,
+                TotalClaimAmount: res.data.TotalClaimAmount,
+                Remark: res.data.Remark,
+                ExaminationDate: res.data.ExaminationDate,
+            }
+            setSelectedApply(resData);
+            setListInfo(res['data']['documentList'])
+        } else {
+            message.warning("apply is empty")
+        }
+
+    };
+
 
     return (<>   <Button type="primary" onClick={() => {
         getApplyListAll()
@@ -92,11 +120,12 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                     onChange={(e) => {
                         handleChange(e)
                     }}
+
                     options={[
                         {label: 'Submit', value: 'Submit'},
                         {label: 'Pending', value: 'Pending'},
                         {label: 'Reject', value: 'Reject'},
-                        {label: 'Finish', value: 'Finish'}
+                        {label: 'approve', value: 'Finish'}
                     ]}/>
             </Form.Item>
             <Form.Item
@@ -105,6 +134,29 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
             >
                 <Input.TextArea/>
             </Form.Item>
+            {selectedApply && (
+                <div style={{padding: "20px"}}>
+                    <p><strong>Total Claim Amount:</strong> {selectedApply.TotalClaimAmount}</p>
+                    <p><strong>Total Amount Spent:</strong> {selectedApply.TotalAmountSpent}</p>
+                    <p><strong>Examination Date:</strong> {selectedApply.ExaminationDate}</p>
+                    <p><strong>Remark:</strong> {selectedApply.Remark}</p>
+                </div>
+            )}
+            {listInfo.length > 0 && (
+                <div style={{borderTop: '1px solid #ccc', paddingTop: '20px'}}>
+                    {listInfo.map((item: any, index: number) => (
+                        <div key={index} style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <div>
+                                <p><strong>Title:</strong> {item.Title}</p>
+                                <p><strong>Description:</strong> {item.Description}</p>
+                                {/*<p><strong>Rejection Reason:</strong> {item.RejectionReason}</p>*/}
+                            </div>
+                            <Image style={{width: "100px", height: "100px"}}
+                                   src={`data:image/jpeg;base64, ${item.FileContent}`}/>
+                        </div>
+                    ))}
+                </div>
+            )}
         </Form>
     </Modal></>)
 }
