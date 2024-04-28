@@ -7,7 +7,8 @@ import {createDocument, del, list} from "../api/cert/document"; // Import custom
 
 const documentTypes = [
     {value: "Google", label: "Google"},
-    {value: "Microsoft", label: "Microsoft"}
+    {value: "Microsoft", label: "Microsoft"},
+    {value: "AWS", label: "AWS"}
 ];
 
 
@@ -79,7 +80,7 @@ const DocumentManage: React.FC = () => {
         let res: any = await del(record)
         if (res['code'] === '00000') {
             getDocumentList()
-            message.info("del success")
+            message.info("delete success")
         }
 
     }

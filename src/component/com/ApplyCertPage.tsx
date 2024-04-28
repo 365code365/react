@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Button, DatePicker, Form, Image, Input, message, Modal, Upload} from "antd";
 import {createApply} from "../../api/cert/courseCertClaim";
 import {createDocument} from "../../api/cert/document";
@@ -29,8 +29,22 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
 
     const handleApplySubmit = async (values: any) => {
         try {
-            console.log('values', values)
-            values.ExaminationDate = new Date(values.ExaminationDate);
+            const TotalAmountSpent = parseInt(values['TotalAmountSpent']);
+            const TotalClaimAmount = parseInt(values['TotalClaimAmount'])
+            if (TotalClaimAmount > 500) {
+                message.info("The reimbursement amount cannot exceed 500 yuan")
+                return
+            }
+            if (TotalAmountSpent < TotalClaimAmount) {
+                message.info("The expense amount cannot be less than the reimbursement amount.")
+                return
+            }
+            if (listInfo.length < 4) {
+                message.info("Please upload four reimbursement documents.")
+                return
+            }
+            console.log('values111111', values)
+            values.ExaminationDate =  values.ExaminationDate.toISOString().split('T')[0];
             values.CourseAndCertificationID = props.selectedCourseID;
             values.UserID = localStorage.getItem("UserID");
 
@@ -100,7 +114,7 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
                 Apply
             </Button>
             <Modal
-                title="Apply Certificate"
+                title="Submit Certificate Claims"
                 visible={applyModalVisible}
                 onCancel={handleApplyCancel}
                 onOk={() => applyForm.submit()}
@@ -113,19 +127,20 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
                     initialValues={{CourseAndCertificationID: props.selectedCourseID}}
                 >
                     <Form.Item
-                        name="TotalClaimAmount"
-                        label="Total Claim Amount"
-                        rules={[{required: true, message: 'Please enter total claim amount'}]}
-                    >
-                        <Input/>
-                    </Form.Item>
-                    <Form.Item
                         name="TotalAmountSpent"
                         label="Total Amount Spent"
                         rules={[{required: true, message: 'Please enter total amount spent'}]}
                     >
                         <Input/>
                     </Form.Item>
+                    <Form.Item
+                        name="TotalClaimAmount"
+                        label="Total Claim Amount"
+                        rules={[{required: true, message: 'Total claim amount'}]}
+                    >
+                        <Input/>
+                    </Form.Item>
+
                     <Form.Item
                         name="ExaminationDate"
                         label="Examination Date"
@@ -137,10 +152,10 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
 
 
                 <Button type="default" onClick={() => setAdditionalInfoModalVisible(true)}>
-                    Additional Info
+                    Upload Supporting Documents
                 </Button>
                 <Modal
-                    title="Additional Information"
+                    title="Supporting Documents"
                     visible={additionalInfoModalVisible}
                     onCancel={handleAdditionalInfoCancel}
                     onOk={() => additionalInfoForm.submit()}
@@ -157,17 +172,17 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
                         <Form.Item
                             name="Description"
                             label="Description"
-                            rules={[{required: true, message: 'Please enter a description'}]}
+                            rules={[{message: 'Please enter a description'}]}
                         >
                             <Input.TextArea/>
                         </Form.Item>
-                        <Form.Item
+                        {/*<Form.Item
                             name="RejectionReason"
                             label="Rejection *"
                             rules={[{required: true, message: 'Please enter a Rejection reason'}]}
                         >
                             <Input.TextArea/>
-                        </Form.Item>
+                        </Form.Item>*/}
                         <Form.Item
                             name="FileContent"
                             label="FileContent"
@@ -179,10 +194,14 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
                         >
                             {fileList.length < 1 && '+ Upload'}
                         </Upload>
+
+
                         </Form.Item>
                     </Form>
                 </Modal>
                 <h3>List Information</h3>
+                <h5>Must upload 4 documents (invoice, payment receipt(eg.paylah receipt), exam certificatie, exam
+                    score)</h5>
                 {listInfo.length > 0 && (
                     <div style={{borderTop: '1px solid #ccc', paddingTop: '20px'}}>
                         {listInfo.map((item: any, index: number) => (
@@ -190,7 +209,7 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
                                 <div>
                                     <p><strong>Title:</strong> {item.Title}</p>
                                     <p><strong>Description:</strong> {item.Description}</p>
-                                    <p><strong>Rejection Reason:</strong> {item.RejectionReason}</p>
+                                    {/*<p><strong>Rejection Reason:</strong> {item.RejectionReason}</p>*/}
                                 </div>
                                 <Image style={{width: "100px", height: "100px"}}
                                        src={`data:image/jpeg;base64, ${item.FileContent}`}/>

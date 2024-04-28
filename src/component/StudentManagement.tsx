@@ -118,7 +118,7 @@ const StudentManagement: React.FC = () => {
                         Grade: row[headers.indexOf('Grade')],
                         Email: row[headers.indexOf('Email')],
                         PasswordHash: row[headers.indexOf('PasswordHash')],
-                        Gender: parseInt(row[headers.indexOf('Gender')]), // Parse string value to integer
+                        Gender: (row[headers.indexOf('Gender')]), // Parse string value to integer
                     }));
                     console.log('parsedStudents', parsedStudents)
                     setStudents([...students, ...parsedStudents]);
@@ -134,7 +134,7 @@ const StudentManagement: React.FC = () => {
             {(userRole == 'admin' || userRole === 'teacher') &&
                 <div style={{padding: '20px', textAlign: 'center'}}>
                     <Button type="primary" onClick={showModal} style={{marginBottom: '20px', marginRight: '10px'}}>Add
-                        Student</Button>
+                        User</Button>
 
                     <Upload accept=".xlsx, .xls" beforeUpload={(file) => {
                         handleExcelUpload(file);
@@ -144,9 +144,11 @@ const StudentManagement: React.FC = () => {
                         <Button style={{marginRight: '10px'}} icon={<UploadOutlined/>}>Click to Upload xlsx/xls</Button>
 
                     </Upload>
-
+                    <a href="template.xlsx" download="Template.xlsx">
+                        <Button style={{marginRight: '10px'}}>Click to Download Template</Button>
+                    </a>
                     <Modal
-                        title="Add Student"
+                        title="Add User"
                         visible={isModalVisible}
                         onCancel={handleCancel}
                         footer={null}
@@ -166,13 +168,13 @@ const StudentManagement: React.FC = () => {
                                 <Input/>
                             </Form.Item>
 
-                            <Form.Item
+                            {/*  <Form.Item
                                 label="Age"
                                 name="age"
                                 rules={[{required: true, message: 'Please input student age!'}]}
                             >
                                 <Input/>
-                            </Form.Item>
+                            </Form.Item>*/}
 
                             <Form.Item
                                 label="Grade"
@@ -204,8 +206,8 @@ const StudentManagement: React.FC = () => {
                                 rules={[{required: true, message: 'Please select student gender!'}]}
                             >
                                 <Select>
-                                    <Select.Option value="0">Female</Select.Option>
-                                    <Select.Option value="1">Male</Select.Option>
+                                    <Select.Option value="A">Female</Select.Option>
+                                    <Select.Option value="B">Male</Select.Option>
                                     <Select.Option value="2">Unknown</Select.Option>
                                 </Select>
                             </Form.Item>

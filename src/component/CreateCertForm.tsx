@@ -141,6 +141,7 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                     <Select>
                         <Select.Option value="Google">Google</Select.Option>
                         <Select.Option value="Microsoft">Microsoft</Select.Option>
+                        <Select.Option value="AWS">AWS</Select.Option>
                     </Select>
                 </Form.Item>
 
@@ -159,7 +160,13 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                 >
                     <DatePicker style={{width: "100%"}} showTime format="YYYY-MM-DD HH:mm"/>
                 </Form.Item>
-
+                <Form.Item
+                    name="SubmissionStartDate"
+                    label="Certificate SubmissionStartDate"
+                    rules={[{required: true, message: "Please enter the SubmissionStartDate"}]}
+                >
+                    <DatePicker style={{width: "100%"}} showTime format="YYYY-MM-DD HH:mm"/>
+                </Form.Item>
                 <Form.Item
                     name="SubmissionEndDate"
                     label="Certificate SubmissionEndDate"
@@ -168,21 +175,15 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                     <DatePicker style={{width: "100%"}} showTime format="YYYY-MM-DD HH:mm"/>
                 </Form.Item>
 
-                <Form.Item
-                    name="SubmissionStartDate"
-                    label="Certificate SubmissionStartDate"
-                    rules={[{required: true, message: "Please enter the SubmissionStartDate"}]}
-                >
-                    <DatePicker style={{width: "100%"}} showTime format="YYYY-MM-DD HH:mm"/>
-                </Form.Item>
 
-                <Form.Item
+
+                {/*  <Form.Item
                     name="AdminNum"
                     label="Certificate AdminNum"
                     rules={[{required: true, message: "Please enter the AdminNum"}]}
                 >
                     <Input/>
-                </Form.Item>
+                </Form.Item>*/}
 
                 <Form.Item
                     name="CourseDesc"

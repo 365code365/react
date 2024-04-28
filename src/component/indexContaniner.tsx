@@ -1,5 +1,5 @@
-import {Button, Card, message, Modal, Popover} from "antd";
-import {useEffect, useState} from "react";
+import {Button, Card, Image, message, Modal, Popover} from "antd";
+import React, {useEffect, useState} from "react";
 import {create, del, listAll} from "../api/cert/cert";
 import CreateCertForm from "./CreateCertForm";
 import HTMLPreview from "./HTMLPreview";
@@ -17,6 +17,9 @@ export const IndexContaniner = (props: any) => {
     const [userID, setUserID] = useState<string | null>(null); // State to store selected course ID
     const [detailModalVisible, setDetailModalVisible] = useState(false);
     const [selectedApply, setSelectedApply] = useState<any>(null);
+
+    const [listInfo, setListInfo] = useState<any[]>([]); // State to store uploaded files
+
 
     useEffect(() => {
         getListAll();
@@ -56,8 +59,13 @@ export const IndexContaniner = (props: any) => {
                 Remark: res.data.Remark,
                 ExaminationDate: res.data.ExaminationDate,
             }
+            setListInfo(res['data']['documentList'])
             setSelectedApply(resData);
-            setDetailModalVisible(true);
+           if (res.data.TotalAmountSpent){
+               setDetailModalVisible(true);
+           }else {
+               message.warning('Apply Record is Empty Please Apply')
+           }
         } else {
             message.warning("apply is empty")
         }
@@ -108,7 +116,18 @@ export const IndexContaniner = (props: any) => {
                         cover={<img alt="Applying" src={item["CourseImage"]}
                                     style={{height: 400, objectFit: "cover"}}/>}
                     >
-                        <Card.Meta title={<strong>{item["TitleOfCertification"]}</strong>}/>
+                        <Card.Meta
+                            title={
+                                <>
+                                    <strong>{item["TitleOfCertification"]}</strong><br />
+                                    <span>{"Provider: " + item["NameOfTrainingProvider"]}</span><br />
+                                    <span>{"Course Start: " + item["CourseStart"]}</span><br />
+                                    <span>{"Course End: " + item["CourseEnd"]}</span><br />
+                                    <span>{"Submission Start: " + item["SubmissionStartDate"]}</span><br />
+                                    <span>{"Submission End: " + item["SubmissionEndDate"]}</span>
+                                </>
+                            }
+                            />
                         <div style={{marginBottom: "10px", marginTop: "15px"}}>
                             <Popover
                                 placement="top"
@@ -126,7 +145,7 @@ export const IndexContaniner = (props: any) => {
                                     </div>
                                 }
                             >
-                                <Button type={"primary"}>Certificate desc</Button>
+                                <Button type={"primary"}>Certificate Description</Button>
                             </Popover>
                         </div>
                         {userRole === "student" && (
@@ -186,6 +205,21 @@ export const IndexContaniner = (props: any) => {
                             <p><strong>Total Amount Spent:</strong> {selectedApply.TotalAmountSpent}</p>
                             <p><strong>Examination Date:</strong> {selectedApply.ExaminationDate}</p>
                             <p><strong>Remark:</strong> {selectedApply.Remark}</p>
+                        </div>
+                    )}
+                    {listInfo.length > 0 && (
+                        <div style={{borderTop: '1px solid #ccc', paddingTop: '20px'}}>
+                            {listInfo.map((item: any, index: number) => (
+                                <div key={index} style={{display: 'flex', justifyContent: 'space-between'}}>
+                                    <div>
+                                        <p><strong>Title:</strong> {item.Title}</p>
+                                        <p><strong>Description:</strong> {item.Description}</p>
+                                        {/*<p><strong>Rejection Reason:</strong> {item.RejectionReason}</p>*/}
+                                    </div>
+                                    <Image style={{width: "100px", height: "100px"}}
+                                           src={`data:image/jpeg;base64, ${item.FileContent}`}/>
+                                </div>
+                            ))}
                         </div>
                     )}
                 </Modal>

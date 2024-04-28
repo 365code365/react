@@ -34,10 +34,12 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
             let status = data.Status;
 
             let arr: StepData[] = [
-                {title: 'Submit', description: 'Submit', status: 'finish'}, // Set initial status for the first step
-                {title: 'Pending', description: 'Pending', status: 'wait'}, // Set initial status for the second step
-                {title: 'Reject', description: 'Reject', status: 'wait'}, // Set initial status for the third step
-                {title: 'Finish', description: 'Finish', status: 'wait'} // Set initial status for the fourth step
+                {title: 'Teacher', description: 'Submitted to teacher', status: 'finish'}, // Set initial status for the first step
+                {title: 'SIT Admin', description: 'Submitted to SIT Admin', status: 'wait'}, // Set initial status for the second step
+                {title: 'NYP Admin', description: 'Submitted to NYP Admin', status: 'wait'}, // Set initial status for the third step
+                {title: 'IMDA', description: 'Submitted to IMDA Company', status: 'wait'}, // Set initial status for the fourth step
+                {title: 'Account Admin', description: 'Waiting to Collect Claim', status: 'wait'},
+                {title: 'Reject', description: 'Reject', status: 'wait'}, // Set initial status for the third step// Set initial status for the fourth step
             ];
 
             switch (status) {
@@ -78,7 +80,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
     return (
         <>
             <Button style={{marginLeft: '10px'}} size={'middle'} onClick={showProcess} type={'primary'}>Process</Button>
-            <Modal
+            <Modal width={'1000px'}
                 title="My Process"
                 visible={showModal}
                 onCancel={handleModalCancel}

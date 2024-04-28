@@ -21,7 +21,7 @@ const initialCustomStyle: CSSProperties = {
 // Setting menu
 const menuItems = [
     {key: 'Home', item: IndexContaniner, menuName: 'Home', show: true},
-    {key: 'StudentManage', item: StudentManagement, menuName: 'StudentManage', show: false},
+    {key: 'StudentManage', item: StudentManagement, menuName: 'User Manage', show: false},
     {key: 'DocumentManage', item: DocumentManage, menuName: 'DocumentManage', show: false},
 ];
 
