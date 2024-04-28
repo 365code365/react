@@ -58,6 +58,7 @@ export const IndexContaniner = (props: any) => {
                 TotalClaimAmount: res.data.TotalClaimAmount,
                 Remark: res.data.Remark,
                 ExaminationDate: res.data.ExaminationDate,
+                Status: res.data.Status,
             }
             setListInfo(res['data']['documentList'])
             setSelectedApply(resData);
@@ -198,6 +199,7 @@ export const IndexContaniner = (props: any) => {
                     visible={detailModalVisible}
                     onCancel={() => setDetailModalVisible(false)}
                     footer={null}
+                    className="modal-content" // Add this className
                 >
                     {selectedApply && (
                         <div style={{padding: "20px"}}>
@@ -205,6 +207,7 @@ export const IndexContaniner = (props: any) => {
                             <p><strong>Total Amount Spent:</strong> {selectedApply.TotalAmountSpent}</p>
                             <p><strong>Examination Date:</strong> {selectedApply.ExaminationDate}</p>
                             <p><strong>Remark:</strong> {selectedApply.Remark}</p>
+                            <h2><strong>Status:</strong> {selectedApply.Status}</h2>
                         </div>
                     )}
                     {listInfo.length > 0 && (

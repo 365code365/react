@@ -16,6 +16,8 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
 
     const [selectedApply, setSelectedApply] = useState<any>(null);
 
+    const [approveStatus, setApproveStatus] = useState<any>(null);
+
     const getApplyListAll = async () => {
 
         let param = {
@@ -32,6 +34,10 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
             CourseAndCertificationID: props.CourseAndCertificationID,
             ...values
         }
+        if (!approveStatus){
+            message.warning('Please select  approveStatus')
+        }
+        data['Status'] = approveStatus
         console.log('values', data)
         let res: any = await updateCertClaim(data)
         if (res['code'] === '00000') {
@@ -44,6 +50,10 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
     function handleChange(e: any) {
         console.log('handleChange', handleChange)
         getDetailInfo(e)
+    }
+
+    function handleApproveChange(e: any) {
+        setApproveStatus(e)
     }
 
     function handleApproval() {
@@ -118,7 +128,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                     style={{minWidth: '200px'}}
                     placeholder="Tags Mode"
                     onChange={(e) => {
-                        handleChange(e)
+                        handleApproveChange(e)
                     }}
 
                     options={[
