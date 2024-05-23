@@ -1,9 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {Button, Form, Image, Input, message, Modal, Select} from "antd";
+import React, {useState} from "react";
+import {Button, Form, Image, Input, message, Modal, Select, Steps} from "antd";
 import {getDetail, getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
+
+const {Step} = Steps;
+
 
 interface ProcessPageProps {
     CourseAndCertificationID: string
+}
+
+interface StepModel {
+    aproveRole: string
+    order: string
+    status?: "wait" | "process" | "finish" | "error"; // Added status type
 }
 
 const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
@@ -17,29 +26,34 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
     const [selectedApply, setSelectedApply] = useState<any>(null);
 
     const [approveStatus, setApproveStatus] = useState<any>(null);
+    const [approvalProcess, setApprovalProcess] = useState<StepModel[]>([]);
 
     const getApplyListAll = async () => {
 
-        let param = {
+        const param = {
             CourseAndCertificationID: props.CourseAndCertificationID
         }
-
-        let res: any = await getListById(param);
+        const res: any = await getListById(param);
         setApplyListOptions(res["data"])
+
+        const ruleRes: any = await getDetail({ID: props.CourseAndCertificationID});
+        const applyRuleJson = JSON.parse(ruleRes.data.applyRule);
+        console.log('ruleRes',applyRuleJson)
+        setApprovalProcess(applyRuleJson)
 
     };
 
     async function handleApprovalSubmit(values: any) {
-        let data = {
+        const data = {
             CourseAndCertificationID: props.CourseAndCertificationID,
             ...values
         }
-        if (!approveStatus){
+        if (!approveStatus) {
             message.warning('Please select  approveStatus')
         }
         data['Status'] = approveStatus
         console.log('values', data)
-        let res: any = await updateCertClaim(data)
+        const res: any = await updateCertClaim(data)
         if (res['code'] === '00000') {
             message.info('submit success')
             setApproveModalVisible(false)
@@ -63,18 +77,18 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
 
     const getDetailInfo = async (value: any) => {
 
-        let param = {
+        const param = {
             CourseAndCertificationID: props.CourseAndCertificationID,
             UserID: value
         }
-        let res: any = await getDetail(param)
+        const res: any = await getDetail(param)
         if (res['code'] === '00000' && res['data']) {
-
-            let resData = {
+            console.log('getDetail', res)
+            const resData = {
                 TotalAmountSpent: res.data.TotalAmountSpent,
                 TotalClaimAmount: res.data.TotalClaimAmount,
                 Remark: res.data.Remark,
-                ExaminationDate: res.data.ExaminationDate,
+                ExaminationDate: res.data.ExaminationDate
             }
             setSelectedApply(resData);
             setListInfo(res['data']['documentList'])
@@ -85,10 +99,11 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
     };
 
 
-    return (<>   <Button type="primary" onClick={() => {
-        getApplyListAll()
-        handleApproval()
-    }}>Process</Button> <Modal
+    return (<>
+        <Button type="primary" onClick={() => {
+            getApplyListAll()
+            handleApproval()
+        }}>Process</Button> <Modal
         title="Approval Process"
         visible={approveModalVisible}
         onCancel={() => {
@@ -103,6 +118,19 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
             layout="vertical"
             initialValues={{CourseAndCertificationID: props.CourseAndCertificationID}} // Set initial value for CourseAndCertificationID
         >
+
+            <Form.Item>
+
+                <Steps
+                    current={0}>
+                    {approvalProcess.map((step, index) => (
+                        // <Step key={index} title={step.aproveRole} description={step.aproveRole}
+                        //       status={step.aproveRole}/>
+                        <Step key={index} title={step.aproveRole} description={step.aproveRole}
+                              status={step.status}/>
+                    ))}
+                </Steps>
+            </Form.Item>
 
             <Form.Item
                 name="UserID"

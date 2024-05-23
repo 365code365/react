@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../css/cert/CreateCertForm.css"; // import  css
 import {UploadOutlined, PlusOutlined} from '@ant-design/icons';
-import {getAllUser} from "../api/loginApi";
+import {getAllUser, getGradelist} from "../api/loginApi";
 import moment from 'moment'; // Import moment library for date formatting
 
 type CreateCertFormProps = {
@@ -23,19 +23,20 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
     const [options, setOptions] = useState([{}]);
 
     useEffect(() => {
-        getList()
+        // getList()
+        gradelist()
     }, []);
 
     const getList = async () => {
-        let userListRes: any = await getAllUser();
-        let userList = getUserList(userListRes);
+        const userListRes: any = await getAllUser();
+        const userList = getUserList(userListRes);
         setOptions(userList)
     }
 
     function getUserList(res: any) {
-        let arr: SetStateAction<{}[]> = []
+        const arr: SetStateAction<{}[]> = []
         res['data'].forEach((item: any) => {
-            let value = {
+            const value = {
                 value: item['UserID'],
                 label: item['FullName'],
             }
@@ -83,6 +84,20 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
     const handleChange = (e: any) => {
     };
 
+    const gradelist = async () => {
+        const res = await getGradelist()
+        console.log('getGradelist', res)
+        const arr: SetStateAction<{}[]> = []
+        res['data'].forEach((item: any) => {
+            const value = {
+                value: item['Grade'],
+                label: item['Grade'],
+            }
+            arr.push(value);
+        })
+        setOptions(arr)
+    }
+
     return (
         <Modal
             visible={visible}
@@ -110,9 +125,9 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
         >
             <Form form={form} layout="vertical">
                 <Form.Item
-                    name="UserlD"
-                    label="Select User"
-                    rules={[{required: true, message: "Please select the User."}]}
+                    name="grade"
+                    label="Select grade"
+                    rules={[{required: true, message: "Please select the grade."}]}
                 >
                     <Select
                         defaultValue="Select an option"
@@ -174,7 +189,6 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
                 >
                     <DatePicker style={{width: "100%"}} showTime format="YYYY-MM-DD HH:mm"/>
                 </Form.Item>
-
 
 
                 {/*  <Form.Item
