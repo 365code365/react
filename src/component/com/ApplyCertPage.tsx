@@ -55,7 +55,7 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
             }
 
             listInfo.forEach((item: any) => {
-                item.ClaimlD = props.selectedCourseID;
+                item.ClaimID = props.selectedCourseID;
                 item.UserID = localStorage.getItem("UserID");
                 createDocument(item)
             })
