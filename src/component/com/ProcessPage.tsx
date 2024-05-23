@@ -55,6 +55,8 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
         if (res['code'] === '00000') {
             message.info('submit success')
             setApproveModalVisible(false)
+        }else {
+            message.warning(res['message'])
         }
     }
 

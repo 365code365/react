@@ -15,11 +15,23 @@ interface ApprovePageProps {
     CourseAndCertificationID: string;
 }
 
+interface StepModel {
+    aproveRole: string
+    order: number
+    desc: string
+    status?: "wait" | "process" | "finish" | "error"; // Added status type
+}
+
 const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
     const [showProgressBar, setShowProgressBar] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [stepsData, setStepsData] = useState<StepData[]>([]);
     const [remark, setRemark] = useState("");
+
+
+    const [approvalProcess, setApprovalProcess] = useState<StepModel[]>([]);
+    const [currentStep, setCurrentStep] = useState<number>(0);
+
 
     async function getProcess() {
         let paramBody = {
@@ -31,39 +43,21 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
         let data = res['data'];
 
         if (data) {
-            let status = data.Status;
+            console.log('res',res)
 
-            let arr: StepData[] = [
-                {title: 'Teacher', description: 'Submitted to teacher', status: 'finish'}, // Set initial status for the first step
-                {title: 'SIT Admin', description: 'Submitted to SIT Admin', status: 'wait'}, // Set initial status for the second step
-                {title: 'NYP Admin', description: 'Submitted to NYP Admin', status: 'wait'}, // Set initial status for the third step
-                {title: 'IMDA', description: 'Submitted to IMDA Company', status: 'wait'}, // Set initial status for the fourth step
-                {title: 'Account Admin', description: 'Waiting to Collect Claim', status: 'wait'},
-                {title: 'Reject', description: 'Reject', status: 'wait'}, // Set initial status for the third step// Set initial status for the fourth step
-            ];
+            const applyRuleJson = JSON.parse(res.data.applyRule);
+            console.log('ruleRes', applyRuleJson)
 
-            switch (status) {
-                case 'Reject':
-                    arr[1].status = 'finish'; // Change status for the "Reject" step
-                    arr[2].status = 'error'; // Change status for the "Reject" step
-                    arr = arr.filter(item => item.title !== 'Finish');
-                    break;
-                case 'Pending':
-                    arr[1].status = 'finish'; // Change status for the "Finish" step
-                    arr[3].status = 'wait'; // Change status for the "Finish" step
-                    arr = arr.filter(item => item.title !== 'Reject');
-                    break;
-                case 'Finish':
-                    arr[1].status = 'finish'; // Change status for the "Finish" step
-                    arr[3].status = 'finish'; // Change status for the "Finish" step
-                    arr = arr.filter(item => item.title !== 'Reject');
-                    break;
-                default:
-                    break;
+            for (let i = 0; i < applyRuleJson.length; i++) {
+                if (applyRuleJson[i].status !== 'waiting') {
+                    setCurrentStep(parseInt(applyRuleJson[i].order))
+                    break
+                }
             }
 
+            setApprovalProcess(applyRuleJson)
+
             setRemark(data.Remark);
-            setStepsData(arr);
         }
     }
 
@@ -89,9 +83,9 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
                 {showProgressBar && (
                     <div style={{marginTop: '20px'}}>
                         <Steps
-                            current={stepsData.findIndex(step => step.status === 'process' || step.status === 'finish')}>
-                            {stepsData.map((step, index) => (
-                                <Step key={index} title={step.title} description={step.description}
+                            current={currentStep}>
+                            {approvalProcess.map((step, index) => (
+                                <Step key={index} title={step.aproveRole} description={step.desc}
                                       status={step.status}/>
                             ))}
                         </Steps>

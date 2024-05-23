@@ -79,6 +79,10 @@ export const IndexContaniner = (props: any) => {
         return value ? value : '';
     }
 
+    function allowApprove() {
+        return ['SIT','NYP','IMDA','Account'].includes(userRole as string)
+    }
+
     return (
         <div>
             <div>
@@ -159,7 +163,7 @@ export const IndexContaniner = (props: any) => {
                                     <ApplyCertPage selectedCourseID={item.ID}/>
                                     <ApprovePage UserId={getUserId()} CourseAndCertificationID={item.ID}/></div>
                             </>
-                        )} {userRole === "teacher" && (
+                        )} {allowApprove() && (
                         <>
                            <ProcessPage CourseAndCertificationID={item.ID}/>
                         </>
