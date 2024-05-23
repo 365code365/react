@@ -11,6 +11,7 @@ interface ProcessPageProps {
 
 interface StepModel {
     aproveRole: string
+    aproveRoleName: string
     order: number
     desc: string
     status?: "wait" | "process" | "finish" | "error"; // Added status type
@@ -138,7 +139,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                     <Steps
                         current={currentStep}>
                         {approvalProcess.map((step, index) => (
-                            <Step key={index} title={step.aproveRole} description={step.desc}
+                            <Step key={index} title={step.aproveRoleName} description={step.desc}
                                   status={step.status}/>
                         ))}
                     </Steps>
