@@ -32,7 +32,7 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
             const TotalAmountSpent = parseInt(values['TotalAmountSpent']);
             const TotalClaimAmount = parseInt(values['TotalClaimAmount'])
             if (TotalClaimAmount > 500) {
-                message.info("The reimbursement amount cannot exceed 500 yuan")
+                message.info("The reimbursement amount cannot exceed 500 SDG")
                 return
             }
             if (TotalAmountSpent < TotalClaimAmount) {
