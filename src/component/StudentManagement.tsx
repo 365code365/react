@@ -38,7 +38,7 @@ const StudentManagement: React.FC = () => {
         {title: 'Grade', dataIndex: 'Grade', key: 'Grade'},
         {title: 'Email', dataIndex: 'Email', key: 'Email'},
         {title: 'PasswordHash', dataIndex: 'PasswordHash', key: 'PasswordHash'},
-        {title: 'Gender', dataIndex: 'Gender', key: 'Gender', render: (gender: string) => (gender === 'A' ? 'Female' : (gender === 'B' ? 'Male' : 'Unknown'))},
+        {title: 'Gender', dataIndex: 'Gender', key: 'Gender'},
         {
             title: 'Actions',
             dataIndex: 'actions',
@@ -206,9 +206,9 @@ const StudentManagement: React.FC = () => {
                                 rules={[{required: true, message: 'Please select student gender!'}]}
                             >
                                 <Select>
-                                    <Select.Option value="A">Female</Select.Option>
-                                    <Select.Option value="B">Male</Select.Option>
-                                    <Select.Option value="2">Unknown</Select.Option>
+                                    <Select.Option value="Female">Female</Select.Option>
+                                    <Select.Option value="Male">Male</Select.Option>
+                                    <Select.Option value="Unknown">Unknown</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item
