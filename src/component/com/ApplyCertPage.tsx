@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {Button, DatePicker, Form, Image, Input, message, Modal, Upload} from "antd";
 import {createApply} from "../../api/cert/courseCertClaim";
 import {createDocument} from "../../api/cert/document";
+import applyIcon from "../../assert/apply.svg";
 
 interface ApplyCertPageProps {
     selectedCourseID: string;
@@ -110,9 +111,7 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
 
     return (
         <>
-            <Button type="primary" onClick={() => setApplyModalVisible(true)}>
-                Apply
-            </Button>
+            <img style={{height:'35px',cursor:'pointer'}} src={applyIcon} onClick={() => setApplyModalVisible(true)}/>
             <Modal
                 title="Submit Certificate Claims"
                 visible={applyModalVisible}

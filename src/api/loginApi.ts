@@ -19,6 +19,6 @@ export const addRole = async <T>(data?: object): Promise<T> => {
 }
 
 
-export const getGradeList = async <T>(): Promise<T> => {
+export const getGradelist = async <T>(): Promise<T> => {
     return get("/grade/gradeList")
 }

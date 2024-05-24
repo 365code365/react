@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import {Button, Form, Image, Input, message, Modal, Select, Steps} from "antd";
 import {getDetail, getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
 
+import processIcon from "../../assert/process.svg";
+
 const {Step} = Steps;
 
 
@@ -113,10 +115,10 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
 
 
     return (<>
-        <Button type="primary" onClick={() => {
+        <img style={{height:'35px',cursor:'pointer'}} src={processIcon} onClick={() => {
             getApplyListAll()
             handleApproval()
-        }}>Process</Button>
+        }}/>
         <Modal
             width={900}
             title="Approval Process"

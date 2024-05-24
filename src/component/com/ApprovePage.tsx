@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {Button, Modal, Steps} from "antd";
 import {getDetail} from "../../api/cert/courseCertClaim";
+import processIcon from "../../assert/process.svg";
 
 const {Step} = Steps;
 
@@ -73,12 +74,13 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
 
     return (
         <>
-            <Button style={{marginLeft: '10px'}} size={'middle'} onClick={showProcess} type={'primary'}>Process</Button>
+            <img style={{height: '35px', cursor: 'pointer'}} src={processIcon}
+                 onClick={() => showProcess()}/>
             <Modal width={'1000px'}
-                title="My Process"
-                visible={showModal}
-                onCancel={handleModalCancel}
-                footer={null}
+                   title="My Process"
+                   visible={showModal}
+                   onCancel={handleModalCancel}
+                   footer={null}
             >
                 {showProgressBar && (
                     <div style={{marginTop: '20px'}}>

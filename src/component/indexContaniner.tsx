@@ -7,6 +7,10 @@ import { getDetail} from "../api/cert/courseCertClaim";
 import ApprovePage from "./com/ApprovePage";
 import ApplyCertPage from "./com/ApplyCertPage";
 import ProcessPage from "./com/ProcessPage";
+import Icon from "antd/es/icon";
+import applyIcon from "../assert/apply.svg";
+import deatilcon from "../assert/deatil.svg";
+import {DeleteOutlined} from "@ant-design/icons";
 
 export const IndexContaniner = (props: any) => {
     const [cardInfoList, setCardInfoList] = useState([]);
@@ -133,7 +137,7 @@ export const IndexContaniner = (props: any) => {
                                 </>
                             }
                             />
-                        <div style={{marginBottom: "10px", marginTop: "15px"}}>
+                        <div style={{marginBottom: "10px", marginTop: "15px",display:'inline-block'}}>
                             <Popover
                                 placement="top"
                                 trigger="click"
@@ -150,16 +154,15 @@ export const IndexContaniner = (props: any) => {
                                     </div>
                                 }
                             >
-                                <Button type={"primary"}>Certificate Description</Button>
+                                <img style={{height:'35px',cursor:'pointer'}} src={deatilcon}/>
                             </Popover>
                         </div>
                         {userRole === "student" && (
                             <>
-                                <div style={{display:"flex"}}><Button type="primary" onClick={() => {
-                                    handleShowMyApply(item)
-                                }} style={{marginRight: "10px"}}>
-                                    My Apply
-                                </Button>
+                                <div style={{display:"flex"}}>
+                                    <img style={{height:'35px',cursor:'pointer'}} src={applyIcon} onClick={() => {
+                                        handleShowMyApply(item)
+                                    }}></img>
                                     <ApplyCertPage selectedCourseID={item.ID}/>
                                     <ApprovePage UserId={getUserId()} CourseAndCertificationID={item.ID}/></div>
                             </>
@@ -170,12 +173,11 @@ export const IndexContaniner = (props: any) => {
                     )}
                         {userRole === "admin" && (
                             <Button
+                                icon={<DeleteOutlined />}
                                 style={{position: "absolute", top: 0, right: 0}}
                                 onClick={() => handleDelete(item)}
                                 type={"primary"}
-                            >
-                                Delete
-                            </Button>
+                            />
                         )}
                     </Card>
                 ))}
