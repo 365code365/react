@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../css/cert/CreateCertForm.css"; // import  css
 import {UploadOutlined, PlusOutlined} from '@ant-design/icons';
-import {getAllUser, getGradelist} from "../api/loginApi";
+import {getAllUser, getGradeList} from "../api/loginApi";
 import moment from 'moment'; // Import moment library for date formatting
 
 type CreateCertFormProps = {
@@ -85,7 +85,7 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
     };
 
     const gradelist = async () => {
-        const res = await getGradelist()
+        const res = await getGradeList()
         console.log('getGradelist', res)
         const arr: SetStateAction<{}[]> = []
         res['data'].forEach((item: any) => {
