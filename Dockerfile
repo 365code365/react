@@ -7,7 +7,7 @@ WORKDIR /app
 ENV TZ="Asia/Shanghai"
 
 # 更新软件包索引并安装git
-RUN apt-get update && apt-get install -y git
+RUN sudo yum update -y && sudo yum install -y git
 
 # 克隆GitHub项目
 RUN git clone https://github.com/365code365/react-plat.git .
