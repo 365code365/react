@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Form, Image, Input, message, Modal, Select, Steps} from "antd";
 import {getDetail, getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
 
 import processIcon from "../../assert/process.svg";
+import {getGradeList} from "../../api/loginApi";
 
 const {Step} = Steps;
 
@@ -33,6 +34,14 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
     const [approvalProcess, setApprovalProcess] = useState<StepModel[]>([]);
     const [currentStep, setCurrentStep] = useState<number>(0);
 
+
+    const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
+
+    useEffect(() => {
+        gradeList()
+    }, []);
+
+
     const getApplyListAll = async () => {
 
         const param = {
@@ -58,7 +67,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
         if (res['code'] === '00000') {
             message.info('submit success')
             setApproveModalVisible(false)
-        }else {
+        } else {
             message.warning(res['message'])
         }
     }
@@ -113,9 +122,26 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
 
     };
 
+    const gradeList = async () => {
+        try {
+            const res: any = await getGradeList();
+            const arr = res.data.map((item: any) => ({
+                value: item.Grade,
+                label: item.Grade,
+            }));
+            setOptions(arr);
+        } catch (error) {
+            message.error('Failed to fetch grade list');
+        }
+    };
+
+
+    function allowApprove(role: string) {
+        return ['SIT', 'NYP', 'IMDA', 'Account'].includes(role)
+    }
 
     return (<>
-        <img style={{height:'35px',cursor:'pointer'}} src={processIcon} onClick={() => {
+        <img style={{height: '35px', cursor: 'pointer'}} src={processIcon} onClick={() => {
             getApplyListAll()
             handleApproval()
         }}/>
@@ -147,20 +173,35 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                     </Steps>
                 </Form.Item>
 
-                <Form.Item
-                    name="UserID"
-                    label="UserID"
-                    rules={[{required: true, message: 'Please enter total amount spent'}]}
+                {
+                    !allowApprove(localStorage.getItem("UserRole")) && <Form.Item
+                        name="UserID"
+                        label="UserID"
+                        rules={[{required: true, message: 'Please enter total amount spent'}]}
+                    >
+                        <Select
+                            defaultValue="Select an student"
+                            style={{minWidth: '200px'}}
+                            placeholder="Tags Mode"
+                            onChange={(e) => {
+                                handleChange(e)
+                            }}
+                            options={applyListOptions}/>
+                    </Form.Item>
+                }
+
+                {allowApprove(localStorage.getItem("UserRole")) && <Form.Item
+                    name="grade"
+                    label="Select grade"
+                    rules={[{required: true, message: "Please select the grade."}]}
                 >
                     <Select
-                        defaultValue="Select an student"
-                        style={{minWidth: '200px'}}
-                        placeholder="Tags Mode"
-                        onChange={(e) => {
-                            handleChange(e)
-                        }}
-                        options={applyListOptions}/>
+                        placeholder="Select an option"
+                        options={options}
+                    />
                 </Form.Item>
+                }
+
                 <Form.Item
                     name="Status"
                     label="Status"

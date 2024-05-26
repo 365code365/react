@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../css/cert/CreateCertForm.css";
 import {PlusOutlined} from '@ant-design/icons';
-import {getGradelist} from "../api/loginApi";
+import {getGradeList} from "../api/loginApi";
 
 import {formatDateTime} from '../util/dataUtil'
 import moment from "moment";
@@ -60,7 +60,7 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({visible, onCancel, onCre
 
     const gradeList = async () => {
         try {
-            const res: any = await getGradelist();
+            const res: any = await getGradeList();
             const arr = res.data.map((item: any) => ({
                 value: item.Grade,
                 label: item.Grade,
