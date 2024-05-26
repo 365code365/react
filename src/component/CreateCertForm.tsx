@@ -27,23 +27,6 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
         gradelist()
     }, []);
 
-    const getList = async () => {
-        const userListRes: any = await getAllUser();
-        const userList = getUserList(userListRes);
-        setOptions(userList)
-    }
-
-    function getUserList(res: any) {
-        const arr: SetStateAction<{}[]> = []
-        res['data'].forEach((item: any) => {
-            const value = {
-                value: item['UserID'],
-                label: item['FullName'],
-            }
-            arr.push(value);
-        })
-        return arr
-    }
 
     // upload image success result
     const onUploadChange = (info: any) => {
