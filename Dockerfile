@@ -6,25 +6,20 @@ WORKDIR /app
 # 设置时区
 ENV TZ="Asia/Shanghai"
 
-# 更新软件包索引并安装git
-RUN apt-get update && apt-get install -y git
+## 更新软件包索引并安装git
+#RUN yum -y update && \
+#    yum -y install git && \
+#    yum clean all
 
 # 克隆GitHub项目
 RUN git clone https://github.com/365code365/react-plat.git .
 
 # 安装依赖项
-# Install npm globally and dependencies
-RUN npm install -g npm@10.5.2
+RUN npm install -g npm@10.5.2 && \
+    npm i --save-dev @types/jest --legacy-peer-deps && \
+    npm install --legacy-peer-deps && \
+    npm run build
 
-RUN npm cache clean --force
-
-#RUN npm i --save-dev @types/jest --legacy-peer-deps
-# 安装依赖
-RUN npm install --force
-
-# 构建React应用
-# Build the React application
-RUN npm run build
 # 第二阶段：构建Nginx服务器
 FROM nginx:latest
 
