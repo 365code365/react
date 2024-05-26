@@ -58,7 +58,7 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({visible, onCancel, onCre
 
     const gradeList = async () => {
         try {
-            const res = await getGradelist();
+            const res: any = await getGradelist();
             const arr = res.data.map((item: any) => ({
                 value: item.Grade,
                 label: item.Grade,
