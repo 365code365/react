@@ -69,7 +69,6 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
 
     const gradeList = async () => {
         const res111: any = await getGradelist()
-        console.log('getGradelist', res111)
         const arr:any[] = []
         res111['data'].forEach((item: any) => {
             const value = {

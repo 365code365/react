@@ -18,9 +18,9 @@ RUN npm install -g npm@10.5.2
 
 RUN npm cache clean --force
 
-RUN npm i --save-dev @types/jest --legacy-peer-deps
+#RUN npm i --save-dev @types/jest --legacy-peer-deps
 # 安装依赖
-RUN npm install --legacy-peer-deps
+RUN npm install --force
 
 # 构建React应用
 # Build the React application
