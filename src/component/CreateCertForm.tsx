@@ -3,7 +3,7 @@ import {Modal, Form, Input, Select, Button, Upload, message, DatePicker} from "a
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../css/cert/CreateCertForm.css"; // import  css
-import {UploadOutlined, PlusOutlined} from '@ant-design/icons';
+import { PlusOutlined} from '@ant-design/icons';
 import {getAllUser, getGradelist} from "../api/loginApi";
 import moment from 'moment'; // Import moment library for date formatting
 
@@ -85,9 +85,9 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
     };
 
     const gradelist = async () => {
-        const res = await getGradelist()
+        const res:any = await getGradelist()
         console.log('getGradelist', res)
-        const arr: SetStateAction<{}[]> = []
+        const arr:never = []
         res['data'].forEach((item: any) => {
             const value = {
                 value: item['Grade'],

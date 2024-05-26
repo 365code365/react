@@ -13,11 +13,15 @@ RUN apt-get update && apt-get install -y git
 RUN git clone https://github.com/365code365/react-plat.git .
 
 # 安装依赖项
-RUN npm install -g npm@10.5.2 && \
-    npm i --save-dev @types/jest --legacy-peer-deps && \
-    npm install --legacy-peer-deps && \
-    npm run build
+# Install npm globally and dependencies
+RUN npm install -g npm@10.5.2
+RUN npm i --save-dev @types/jest --legacy-peer-deps
+# 安装依赖
+RUN npm install --legacy-peer-deps
 
+# 构建React应用
+# Build the React application
+RUN npm run build
 # 第二阶段：构建Nginx服务器
 FROM nginx:latest
 
