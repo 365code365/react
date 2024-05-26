@@ -15,6 +15,9 @@ RUN git clone https://github.com/365code365/react-plat.git .
 # 安装依赖项
 # Install npm globally and dependencies
 RUN npm install -g npm@10.5.2
+
+RUN npm cache clean --force
+
 RUN npm i --save-dev @types/jest --legacy-peer-deps
 # 安装依赖
 RUN npm install --legacy-peer-deps

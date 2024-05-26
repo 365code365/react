@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../css/cert/CreateCertForm.css"; // import  css
 import { PlusOutlined} from '@ant-design/icons';
-import {getAllUser, getGradelist} from "../api/loginApi";
+import {getGradelist} from "../api/loginApi";
 import moment from 'moment'; // Import moment library for date formatting
 
 type CreateCertFormProps = {
