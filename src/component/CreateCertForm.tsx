@@ -24,7 +24,7 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
 
     useEffect(() => {
         // getList()
-        gradelist()
+        gradeList()
     }, []);
 
 
@@ -67,7 +67,7 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({
     const handleChange = (e: any) => {
     };
 
-    const gradelist = async () => {
+    const gradeList = async () => {
         const res:any = await getGradelist()
         console.log('getGradelist', res)
         const arr:any[] = []
