@@ -5,7 +5,9 @@ import "react-quill/dist/quill.snow.css";
 import "../css/cert/CreateCertForm.css";
 import {PlusOutlined} from '@ant-design/icons';
 import {getGradelist} from "../api/loginApi";
-import moment from 'moment';
+
+import {formatDateTime} from '../util/dataUtil'
+import moment from "moment";
 
 type CreateCertFormProps = {
     visible: boolean;
@@ -69,6 +71,11 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({visible, onCancel, onCre
         }
     };
 
+    const handleDateChange = (fieldName, dateString) => {
+        console.log('dateString', dateString)
+        form.setFieldsValue({[fieldName]: dateString});
+    };
+
     return (
         <Modal
             visible={visible}
@@ -79,10 +86,19 @@ const CreateCertForm: React.FC<CreateCertFormProps> = ({visible, onCancel, onCre
             onOk={() => {
                 form.validateFields()
                     .then((values) => {
-                        values.SubmissionStartDate = moment(values.SubmissionStartDate).format("YYYY-MM-DD HH:mm");
-                        values.SubmissionEndDate = moment(values.SubmissionEndDate).format("YYYY-MM-DD HH:mm");
-                        values.CourseStart = moment(values.CourseStart).format("YYYY-MM-DD HH:mm");
-                        values.CourseEnd = moment(values.CourseEnd).format("YYYY-MM-DD HH:mm");
+                        values.SubmissionStartDate = moment(values.SubmissionStartDate.$d).format("YYYY-MM-DD HH:mm");
+                        values.SubmissionEndDate = moment(values.SubmissionEndDate.$d).format("YYYY-MM-DD HH:mm");
+                        values.CourseStart = moment(values.CourseStart.$d).format("YYYY-MM-DD HH:mm");
+                        values.CourseEnd = moment(values.CourseEnd.$d).format("YYYY-MM-DD HH:mm");
+
+                        if (values.CourseStart > values.CourseEnd) {
+                            message.warning("CourseStart cannot be greater than CourseEnd.")
+                            return
+                        }
+                        if (values.SubmissionStartDate > values.SubmissionEndDate) {
+                            message.warning("SubmissionStartDate cannot be greater than SubmissionEndDate.")
+                            return
+                        }
                         onCreate(values);
                     })
                     .catch((info) => {
