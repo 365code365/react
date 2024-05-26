@@ -180,6 +180,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                         rules={[{required: true, message: 'Please enter total amount spent'}]}
                     >
                         <Select
+                            // mode="multiple"
                             defaultValue="Select an student"
                             style={{minWidth: '200px'}}
                             placeholder="Tags Mode"

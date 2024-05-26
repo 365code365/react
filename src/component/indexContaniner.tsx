@@ -84,7 +84,7 @@ export const IndexContaniner = (props: any) => {
     }
 
     function allowApprove() {
-        return ['SIT','NYP','IMDA','Account'].includes(userRole as string)
+        return ["teacher", 'SIT', 'NYP', 'IMDA', 'Account'].includes(userRole as string)
     }
 
     return (
