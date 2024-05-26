@@ -35,13 +35,13 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
 
 
     async function getProcess() {
-        let paramBody = {
+        const paramBody = {
             UserID: props.UserId,
             CourseAndCertificationID: props.CourseAndCertificationID
         };
-        let res: any = await getDetail(paramBody);
+        const res: any = await getDetail(paramBody);
 
-        let data = res['data'];
+        const data = res['data'];
 
         if (data) {
             console.log('res',res)

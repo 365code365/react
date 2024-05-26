@@ -54,7 +54,7 @@ const DocumentManage: React.FC = () => {
 
 
     const getDocumentList = async () => {
-        let res: any = await list();
+        const res: any = await list();
         setDatasource(res['data'])
     }
 
@@ -64,7 +64,7 @@ const DocumentManage: React.FC = () => {
             console.log("Submitted values:", values);
             // After submission, you might want to reset the form and do other tasks
             // form.resetFields();
-            let res: any = await createDocument(values)
+            const res: any = await createDocument(values)
             if (res['code'] === '00000') {
                 setFormVisible(false);
                 getDocumentList()
@@ -77,7 +77,7 @@ const DocumentManage: React.FC = () => {
 
     async function handleDelete(record: any) {
         console.log('record', record)
-        let res: any = await del(record)
+        const res: any = await del(record)
         if (res['code'] === '00000') {
             getDocumentList()
             message.info("delete success")

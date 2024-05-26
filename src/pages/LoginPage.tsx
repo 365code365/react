@@ -26,11 +26,11 @@ const LoginPage = () => {
 
     const handleLoginClick = async () => {
         // navigate('/home');
-        let loginForm = {
+        const loginForm = {
             Email: email,
             PasswordHash: password
         }
-        let res: any = await login(loginForm)
+        const res: any = await login(loginForm)
         console.log('res', res)
         if (res['code'] === '00000') {
             //save local storage

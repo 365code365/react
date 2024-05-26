@@ -49,7 +49,7 @@ const ApplyCertPage: React.FC<ApplyCertPageProps> = (props: ApplyCertPageProps) 
             values.CourseAndCertificationID = props.selectedCourseID;
             values.UserID = localStorage.getItem("UserID");
 
-            let res: any = await createApply(values);
+            const res: any = await createApply(values);
             if (res['code'] === '00000') {
                 setApplyModalVisible(false);
                 message.info("Apply success");

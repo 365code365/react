@@ -30,14 +30,14 @@ const RegisterPage: React.FC = () => {
             return
         }
 
-        let registerForm = {
+        const registerForm = {
             Email: email,
             FullName: fullName,
             PasswordHash: password,
             Role:'student'
         }
 
-        let res: any = await register(registerForm)
+        const res: any = await register(registerForm)
         console.log('res', res)
         if (res['code'] === '00000') {
             //save local storage

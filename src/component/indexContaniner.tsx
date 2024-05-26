@@ -33,14 +33,14 @@ export const IndexContaniner = (props: any) => {
     }, []);
 
     const getListAll = async () => {
-        let res: any = await listAll();
+        const res: any = await listAll();
         setCardInfoList(res["data"]);
     };
 
 
     const handleDelete = async (item: any) => {
         console.log("Deleting item with item:", item);
-        let res: any = await del(item);
+        const res: any = await del(item);
         if (res['code'] === '00000') {
             getListAll();
             message.info('del success')
@@ -50,14 +50,14 @@ export const IndexContaniner = (props: any) => {
 
     const handleShowMyApply = async (apply: any) => {
 
-        let param = {
+        const param = {
             CourseAndCertificationID: apply.ID,
             UserID: userID
         }
-        let res: any = await getDetail(param)
+        const res: any = await getDetail(param)
         if (res['code'] === '00000' && res['data']) {
 
-            let resData = {
+            const resData = {
                 TotalAmountSpent: res.data.TotalAmountSpent,
                 TotalClaimAmount: res.data.TotalClaimAmount,
                 Remark: res.data.Remark,
@@ -79,7 +79,7 @@ export const IndexContaniner = (props: any) => {
 
 
     function getUserId() {
-        let value = localStorage.getItem("UserID");
+        const value = localStorage.getItem("UserID");
         return value ? value : '';
     }
 
@@ -186,7 +186,7 @@ export const IndexContaniner = (props: any) => {
                         setIsModalOpen(false);
                     }}
                     onCreate={async (values) => {
-                        let res: any = await create(values);
+                        const res: any = await create(values);
                         if (res["code"] == "00000") {
                             getListAll();
                             setIsModalOpen(false);

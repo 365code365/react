@@ -23,7 +23,7 @@ const StudentManagement: React.FC = () => {
 
     async function handleDelete(record: any) {
         console.log('record', record)
-        let res: any = await del(record);
+        const res: any = await del(record);
         if (res['code'] === '00000') {
             getList()
             message.info("del success")
@@ -60,7 +60,7 @@ const StudentManagement: React.FC = () => {
     }, []);
 
     const getList = async () => {
-        let res: any = await list()
+        const res: any = await list()
         setStudents(res['data'])
     }
 
@@ -87,8 +87,8 @@ const StudentManagement: React.FC = () => {
         setStudents([...students, newStudent]);
         setIsModalVisible(false);
         // console.log('students', students)
-        let data = [newStudent]
-        let res = await createUser(data)
+        const data = [newStudent]
+        const res = await createUser(data)
         console.log('studentsres', res)
         formRef.current?.resetFields();
     };

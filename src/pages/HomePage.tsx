@@ -55,7 +55,7 @@ const HomePage = () => {
         setMenuItemsList(menuItemsList)
         console.log('role', role)
         setUserRole(role);
-    }, []);
+    }, [menuItemsList]);
 
 
     return (

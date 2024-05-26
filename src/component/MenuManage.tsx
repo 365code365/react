@@ -33,17 +33,17 @@ export const MenuManage = (prop: any) => {
     }, [])
 
     const getList = async () => {
-        let studdentRes: any = await getAllUser();
+        const studdentRes: any = await getAllUser();
         setDataSource(studdentRes['data'])
-        let studentList = getStudentList(studdentRes);
+        const studentList = getStudentList(studdentRes);
         setOptions(studentList)
     }
 
     function getStudentList(res: any) {
-        let arr: SetStateAction<{}[]> = []
+        const arr: SetStateAction<any[]> = []
         res['data'].forEach((item: any) => {
 
-            let value = {
+            const value = {
                 value: item['UserID'],
                 label: item['FullName'],
             }
