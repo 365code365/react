@@ -42,10 +42,11 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
     }, []);
 
 
-    const getApplyListAll = async () => {
+    const getApplyListAll = async (grade: string) => {
 
         const param = {
-            CourseAndCertificationID: props.CourseAndCertificationID
+            CourseAndCertificationID: props.CourseAndCertificationID,
+            grade: grade
         }
         const res: any = await getListById(param);
         setApplyListOptions(res["data"])
@@ -142,7 +143,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
 
     return (<>
         <img style={{height: '35px', cursor: 'pointer'}} src={processIcon} onClick={() => {
-            getApplyListAll()
+            // getApplyListAll()
             handleApproval()
         }}/>
         <Modal
@@ -174,21 +175,36 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                 </Form.Item>
 
                 {
-                    !allowApprove(localStorage.getItem("UserRole")) && <Form.Item
-                        name="UserID"
-                        label="UserID"
-                        rules={[{required: true, message: 'Please enter total amount spent'}]}
-                    >
-                        <Select
-                            // mode="multiple"
-                            defaultValue="Select an student"
-                            style={{minWidth: '200px'}}
-                            placeholder="Tags Mode"
-                            onChange={(e) => {
-                                handleChange(e)
-                            }}
-                            options={applyListOptions}/>
-                    </Form.Item>
+                    !allowApprove(localStorage.getItem("UserRole")) && (
+                        <>
+                            <Form.Item
+                                name="grade"
+                                label="Select grade"
+                                rules={[{required: true, message: "Please select the grade."}]}
+                            >
+                                <Select
+                                    placeholder="Select an option"
+                                    onChange={(e) => {
+                                        getApplyListAll(e)
+                                    }}
+                                    options={options}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name="UserID"
+                                label="UserID"
+                                rules={[{required: true, message: 'Please select UserID'}]}
+                            >
+                                <Select
+                                    defaultValue="Select an student"
+                                    style={{minWidth: '200px'}}
+                                    placeholder="Tags Mode"
+                                    onChange={(e) => {
+                                        handleChange(e)
+                                    }}
+                                    options={applyListOptions}/>
+                            </Form.Item></>
+                    )
                 }
 
                 {allowApprove(localStorage.getItem("UserRole")) && <Form.Item
