@@ -17,3 +17,7 @@ export const getListById = async <T>(data?: object): Promise<T> => {
     return post("/courseCertClaim/getListById", data)
 }
 
+export const getGradeProcess = async <T>(data?: object): Promise<T> => {
+    return post("/courseCertClaim/getGradeProcess", data)
+}
+

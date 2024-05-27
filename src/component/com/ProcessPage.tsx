@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Image, Input, message, Modal, Select, Steps} from "antd";
-import {getDetail, getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
+import {getDetail, getGradeProcess, getListById, updateCertClaim} from "../../api/cert/courseCertClaim";
 
 import processIcon from "../../assert/process.svg";
 import {getGradeList} from "../../api/loginApi";
@@ -88,6 +88,17 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
     }
 
 
+    const setStep = (applyRuleJson) => {
+        for (let i = 0; i < applyRuleJson.length; i++) {
+            if (applyRuleJson[i].status !== 'waiting') {
+                setCurrentStep(parseInt(applyRuleJson[i].order))
+                break
+            }
+        }
+
+        setApprovalProcess(applyRuleJson)
+    }
+
     const getDetailInfo = async (value: any) => {
 
         const param = {
@@ -107,15 +118,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
             setListInfo(res['data']['documentList'])
             const applyRuleJson = JSON.parse(res.data.applyRule);
             console.log('ruleRes', applyRuleJson)
-
-            for (let i = 0; i < applyRuleJson.length; i++) {
-                if (applyRuleJson[i].status !== 'waiting') {
-                    setCurrentStep(parseInt(applyRuleJson[i].order))
-                    break
-                }
-            }
-
-            setApprovalProcess(applyRuleJson)
+            setStep(applyRuleJson);
 
         } else {
             message.warning("apply is empty")
@@ -184,7 +187,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                             >
                                 <Select
                                     placeholder="Select an option"
-                                    onChange={(e) => {
+                                    onChange={async (e) => {
                                         getApplyListAll(e)
                                     }}
                                     options={options}
@@ -215,6 +218,19 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                     <Select
                         placeholder="Select an option"
                         options={options}
+                        onChange={async (e) => {
+                            const param = {
+                                grade: e
+                            }
+                            const res: any = await getGradeProcess(param)
+                            if (res['code'] === '00000') {
+                                console.log('ssss', JSON.parse(res.data.applyRule))
+                                setStep(JSON.parse(res.data.applyRule))
+                            } else {
+                                setStep([])
+                                message.warning(res.message)
+                            }
+                        }}
                     />
                 </Form.Item>
                 }
