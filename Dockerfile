@@ -14,6 +14,10 @@ ENV TZ="Asia/Shanghai"
 # 克隆GitHub项目
 RUN git clone https://github.com/365code365/react-plat.git .
 
+
+RUN npm config set registry https://registry.npmmirror.com
+
+
 # 安装依赖项
 RUN npm install -g npm@10.5.2 && \
     npm i --save-dev @types/jest --legacy-peer-deps && \
