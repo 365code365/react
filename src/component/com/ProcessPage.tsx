@@ -267,7 +267,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                         <p><strong>Remark:</strong> {selectedApply.Remark}</p>
                     </div>
                 )}
-                {listInfo.length > 0 && (
+                {listInfo.length > 0 && !allowApprove(localStorage.getItem("UserRole")) && (
                     <div style={{borderTop: '1px solid #ccc', paddingTop: '20px'}}>
                         {listInfo.map((item: any, index: number) => (
                             <div key={index} style={{display: 'flex', justifyContent: 'space-between'}}>
