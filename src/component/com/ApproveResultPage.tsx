@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Button, Modal, Steps} from "antd";
+import {Button, Image, Modal, Steps} from "antd";
 import {getDetail} from "../../api/cert/courseCertClaim";
 import processIcon from "../../assert/process.svg";
 
@@ -23,15 +23,14 @@ interface StepModel {
     status?: "wait" | "process" | "finish" | "error"; // Added status type
 }
 
-const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
+const ApproveResultPage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
     const [showProgressBar, setShowProgressBar] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [stepsData, setStepsData] = useState<StepData[]>([]);
     const [remark, setRemark] = useState("");
-
 
     const [approvalProcess, setApprovalProcess] = useState<StepModel[]>([]);
     const [currentStep, setCurrentStep] = useState<number>(0);
+    const [listInfo, setListInfo] = useState<any[]>([]); // State to store uploaded files
 
 
     async function getProcess() {
@@ -44,7 +43,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
         const data = res['data'];
 
         if (data) {
-            console.log('res',res)
+            console.log('res', res)
 
             const applyRuleJson = JSON.parse(res.data.applyRule);
             console.log('ruleRes', applyRuleJson)
@@ -57,7 +56,7 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
             }
 
             setApprovalProcess(applyRuleJson)
-
+            setListInfo(res.data.documentList)
             setRemark(data.Remark);
         }
     }
@@ -97,9 +96,23 @@ const ApprovePage: React.FC<ApprovePageProps> = (props: ApprovePageProps) => {
                     <label style={{fontWeight: 'bold'}}>Remark:</label>
                     <div style={{marginTop: '5px'}}>{remark}</div>
                 </div>
+                {listInfo.length > 0 && (
+                    <div style={{borderTop: '1px solid #ccc', paddingTop: '20px'}}>
+                        {listInfo.map((item: any, index: number) => (
+                            <div key={index} style={{display: 'flex', justifyContent: 'space-between'}}>
+                                <div>
+                                    <p><strong>Title:</strong> {item.Title}</p>
+                                    <p><strong>Description:</strong> {item.Description}</p>
+                                </div>
+                                <Image style={{width: "100px", height: "100px"}}
+                                       src={`data:image/jpeg;base64, ${item.FileContent}`}/>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </Modal>
         </>
     );
 }
 
-export default ApprovePage;
+export default ApproveResultPage;

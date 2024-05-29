@@ -20,7 +20,7 @@ interface StepModel {
     status?: "wait" | "process" | "finish" | "error"; // Added status type
 }
 
-const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
+const ApproveProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
     const [approveModalVisible, setApproveModalVisible] = useState(false);
     const [applyForm] = Form.useForm();
 
@@ -296,4 +296,4 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
         </Modal></>)
 }
 
-export default ProcessPage
+export default ApproveProcessPage

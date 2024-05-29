@@ -4,9 +4,9 @@ import {create, del, listAll} from "../api/cert/cert";
 import CreateCertForm from "./CreateCertForm";
 import HTMLPreview from "./HTMLPreview";
 import { getDetail} from "../api/cert/courseCertClaim";
-import ApprovePage from "./com/ApprovePage";
+import ApproveResultPage from "./com/ApproveResultPage";
 import ApplyCertPage from "./com/ApplyCertPage";
-import ProcessPage from "./com/ProcessPage";
+import ApproveProcessPage from "./com/ApproveProcessPage";
 import Icon from "antd/es/icon";
 import applyIcon from "../assert/apply.svg";
 import deatilcon from "../assert/deatil.svg";
@@ -164,11 +164,11 @@ export const IndexContaniner = (props: any) => {
                                         handleShowMyApply(item)
                                     }}></img>
                                     <ApplyCertPage selectedCourseID={item.ID}/>
-                                    <ApprovePage UserId={getUserId()} CourseAndCertificationID={item.ID}/></div>
+                                    <ApproveResultPage UserId={getUserId()} CourseAndCertificationID={item.ID}/></div>
                             </>
                         )} {allowApprove() && (
                         <>
-                           <ProcessPage CourseAndCertificationID={item.ID}/>
+                            <ApproveProcessPage CourseAndCertificationID={item.ID}/>
                         </>
                     )}
                         {userRole === "admin" && (
