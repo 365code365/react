@@ -115,7 +115,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                 ExaminationDate: res.data.ExaminationDate
             }
             setSelectedApply(resData);
-            setListInfo(res['data']['documentList'])
+            setListInfo(res.data.documentList)
             const applyRuleJson = JSON.parse(res.data.applyRule);
             console.log('ruleRes', applyRuleJson)
             setStep(applyRuleJson);
@@ -144,6 +144,103 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
         return ['SIT', 'NYP', 'IMDA', 'Account'].includes(role)
     }
 
+    const selectStudentByGrade = () => {
+        return (<>
+            <Form.Item
+                name="grade"
+                label="Select grade"
+                rules={[{required: true, message: "Please select the grade."}]}
+            >
+                <Select
+                    placeholder="Select an option"
+                    onChange={async (e) => {
+                        getApplyListAll(e)
+                    }}
+                    options={options}
+                />
+            </Form.Item>
+            <Form.Item
+                name="UserID"
+                label="UserID"
+                rules={[{required: true, message: 'Please select UserID'}]}
+            >
+                <Select
+                    defaultValue="Select an student"
+                    style={{minWidth: '200px'}}
+                    placeholder="Tags Mode"
+                    onChange={(e) => {
+                        handleChange(e)
+                    }}
+                    options={applyListOptions}/>
+            </Form.Item>
+        </>)
+    }
+
+    const onlySelectGrade = () => {
+        return <Form.Item
+            name="grade"
+            label="Select grade"
+            rules={[{required: true, message: "Please select the grade."}]}
+        >
+            <Select
+                placeholder="Select an option"
+                options={options}
+                onChange={async (e) => {
+                    const param = {
+                        grade: e
+                    }
+                    const res: any = await getGradeProcess(param)
+                    if (res['code'] === '00000') {
+                        console.log('ssss', JSON.parse(res.data.applyRule))
+                        setStep(JSON.parse(res.data.applyRule))
+                    } else {
+                        setStep([])
+                        message.warning(res.message)
+                    }
+                }}
+            />
+        </Form.Item>;
+    }
+
+    const getProcess = () => {
+        return <Form.Item>
+            <Steps
+                current={currentStep}>
+                {approvalProcess.map((step, index) => (
+                    <Step key={index} title={step.aproveRoleName} description={step.desc}
+                          status={step.status}/>
+                ))}
+            </Steps>
+        </Form.Item>;
+    }
+
+    const showDetail = () => {
+        return <>
+            {selectedApply && (
+                <div style={{padding: "20px"}}>
+                    <p><strong>Total Claim Amount:</strong> {selectedApply.TotalClaimAmount}</p>
+                    <p><strong>Total Amount Spent:</strong> {selectedApply.TotalAmountSpent}</p>
+                    <p><strong>Examination Date:</strong> {selectedApply.ExaminationDate}</p>
+                    <p><strong>Remark:</strong> {selectedApply.Remark}</p>
+                </div>
+            )}
+            {listInfo.length > 0 && !allowApprove(localStorage.getItem("UserRole")) && (
+                <div style={{borderTop: '1px solid #ccc', paddingTop: '20px'}}>
+                    {listInfo.map((item: any, index: number) => (
+                        <div key={index} style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <div>
+                                <p><strong>Title:</strong> {item.Title}</p>
+                                <p><strong>Description:</strong> {item.Description}</p>
+                            </div>
+                            <Image style={{width: "100px", height: "100px"}}
+                                   src={`data:image/jpeg;base64, ${item.FileContent}`}/>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </>;
+    }
+
     return (<>
         <img style={{height: '35px', cursor: 'pointer'}} src={processIcon} onClick={() => {
             // getApplyListAll()
@@ -166,74 +263,9 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                 initialValues={{CourseAndCertificationID: props.CourseAndCertificationID}} // Set initial value for CourseAndCertificationID
             >
 
-                <Form.Item>
-
-                    <Steps
-                        current={currentStep}>
-                        {approvalProcess.map((step, index) => (
-                            <Step key={index} title={step.aproveRoleName} description={step.desc}
-                                  status={step.status}/>
-                        ))}
-                    </Steps>
-                </Form.Item>
-
-                {
-                    !allowApprove(localStorage.getItem("UserRole")) && (
-                        <>
-                            <Form.Item
-                                name="grade"
-                                label="Select grade"
-                                rules={[{required: true, message: "Please select the grade."}]}
-                            >
-                                <Select
-                                    placeholder="Select an option"
-                                    onChange={async (e) => {
-                                        getApplyListAll(e)
-                                    }}
-                                    options={options}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                name="UserID"
-                                label="UserID"
-                                rules={[{required: true, message: 'Please select UserID'}]}
-                            >
-                                <Select
-                                    defaultValue="Select an student"
-                                    style={{minWidth: '200px'}}
-                                    placeholder="Tags Mode"
-                                    onChange={(e) => {
-                                        handleChange(e)
-                                    }}
-                                    options={applyListOptions}/>
-                            </Form.Item></>
-                    )
-                }
-
-                {allowApprove(localStorage.getItem("UserRole")) && <Form.Item
-                    name="grade"
-                    label="Select grade"
-                    rules={[{required: true, message: "Please select the grade."}]}
-                >
-                    <Select
-                        placeholder="Select an option"
-                        options={options}
-                        onChange={async (e) => {
-                            const param = {
-                                grade: e
-                            }
-                            const res: any = await getGradeProcess(param)
-                            if (res['code'] === '00000') {
-                                console.log('ssss', JSON.parse(res.data.applyRule))
-                                setStep(JSON.parse(res.data.applyRule))
-                            } else {
-                                setStep([])
-                                message.warning(res.message)
-                            }
-                        }}
-                    />
-                </Form.Item>
-                }
+                {getProcess()}
+                {!allowApprove(localStorage.getItem("UserRole")) && (selectStudentByGrade())}
+                {allowApprove(localStorage.getItem("UserRole")) && onlySelectGrade()}
 
                 <Form.Item
                     name="Status"
@@ -259,28 +291,7 @@ const ProcessPage: React.FC<ProcessPageProps> = (props: ProcessPageProps) => {
                 >
                     <Input.TextArea/>
                 </Form.Item>
-                {selectedApply && (
-                    <div style={{padding: "20px"}}>
-                        <p><strong>Total Claim Amount:</strong> {selectedApply.TotalClaimAmount}</p>
-                        <p><strong>Total Amount Spent:</strong> {selectedApply.TotalAmountSpent}</p>
-                        <p><strong>Examination Date:</strong> {selectedApply.ExaminationDate}</p>
-                        <p><strong>Remark:</strong> {selectedApply.Remark}</p>
-                    </div>
-                )}
-                {listInfo.length > 0 && !allowApprove(localStorage.getItem("UserRole")) && (
-                    <div style={{borderTop: '1px solid #ccc', paddingTop: '20px'}}>
-                        {listInfo.map((item: any, index: number) => (
-                            <div key={index} style={{display: 'flex', justifyContent: 'space-between'}}>
-                                <div>
-                                    <p><strong>Title:</strong> {item.Title}</p>
-                                    <p><strong>Description:</strong> {item.Description}</p>
-                                </div>
-                                <Image style={{width: "100px", height: "100px"}}
-                                       src={`data:image/jpeg;base64, ${item.FileContent}`}/>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                {showDetail()}
             </Form>
         </Modal></>)
 }
