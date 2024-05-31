@@ -60,6 +60,7 @@ const HomePage = () => {
 
     return (
         <div>
+            <h1>Hi Ruidong!</h1>
             <div style={{display: 'inline-block', width: '90%'}}>
                 <Menu mode="horizontal" theme="dark">
                     {menuItemsList.map((page) => (
